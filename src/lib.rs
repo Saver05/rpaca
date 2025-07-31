@@ -2,9 +2,11 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
+mod account_activities;
 mod account_configurations;
 mod assets;
 mod auth;
+mod calendar;
 mod get_account_info;
 mod orders;
 mod portfolio;

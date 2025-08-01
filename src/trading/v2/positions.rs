@@ -1,6 +1,6 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::orders::{Order, OrderRequest, create_order};
 use crate::request::create_request;
+use crate::trading::v2::orders::{Order, OrderRequest, create_order};
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 

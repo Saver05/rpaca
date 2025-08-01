@@ -1,4 +1,3 @@
-use crate::assets::Asset;
 use crate::auth::{Alpaca, TradingType};
 use crate::request::create_request;
 use reqwest::Method;
@@ -43,7 +42,9 @@ pub struct WatchlistAssets {
     #[serde(default, deserialize_with = "null_to_empty_vec")]
     assets: Vec<Asset>,
 }
+use crate::trading::v2::assets::Asset;
 use serde::de::Deserializer;
+
 fn null_to_empty_vec<'de, D>(deserializer: D) -> Result<Vec<Asset>, D::Error>
 where
     D: Deserializer<'de>,

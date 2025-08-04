@@ -3,6 +3,7 @@ use crate::request::create_request;
 use crate::trading::v2::orders::{Order, OrderRequest, create_order};
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
+use typed_builder::TypedBuilder;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Position {
@@ -49,10 +50,12 @@ pub async fn get_single_position(
     let p: Position = response.json().await?;
     Ok(p)
 }
-
+#[derive(TypedBuilder)]
 pub struct ClosePositionParams {
     pub symbol: String,
+    #[builder(default, setter(strip_option))]
     pub qty: Option<f64>,
+    #[builder(default, setter(strip_option))]
     pub percentage: Option<f64>,
 }
 pub async fn close_position(
@@ -149,11 +152,10 @@ async fn test_position() {
 
     let close_position = match close_position(
         &alpaca,
-        ClosePositionParams {
-            symbol: "GOOG".to_string(),
-            qty: Some(1.0),
-            percentage: None,
-        },
+        ClosePositionParams::builder()
+            .symbol("GOOG".to_string())
+            .qty(1.0)
+            .build(),
     )
     .await
     {

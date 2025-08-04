@@ -4,17 +4,26 @@ use chrono::{DateTime, Utc};
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumString};
+use typed_builder::TypedBuilder;
 use uuid::Uuid;
 
-#[derive(Debug, Deserialize, Serialize, Default)]
+#[derive(Debug, Deserialize, Serialize, Default, TypedBuilder)]
 pub struct AccountActivitiesParams {
+    #[builder(default, setter(strip_option))]
     activity_types: Option<Vec<String>>,
+    #[builder(default, setter(strip_option))]
     category: Option<String>,
+    #[builder(default, setter(strip_option))]
     date: Option<String>,
+    #[builder(default, setter(strip_option))]
     until: Option<String>,
+    #[builder(default, setter(strip_option))]
     after: Option<String>,
+    #[builder(default, setter(strip_option))]
     direction: Option<String>,
+    #[builder(default, setter(strip_option))]
     page_size: Option<i32>,
+    #[builder(default, setter(strip_option))]
     page_token: Option<String>,
 }
 
@@ -139,13 +148,19 @@ pub async fn get_account_activities(
 
     Ok(response.json().await?)
 }
-#[derive(Debug, Deserialize, Serialize, Default)]
+#[derive(Debug, Deserialize, Serialize, Default, TypedBuilder)]
 pub struct SpecificAccountActivitiesParams {
+    #[builder(default, setter(strip_option))]
     pub date: Option<String>,
+    #[builder(default, setter(strip_option))]
     pub until: Option<String>,
+    #[builder(default, setter(strip_option))]
     pub after: Option<String>,
+    #[builder(default, setter(strip_option))]
     pub direction: Option<String>,
+    #[builder(default, setter(strip_option))]
     pub page_size: Option<i32>,
+    #[builder(default, setter(strip_option))]
     pub page_token: Option<String>,
 }
 
@@ -177,7 +192,14 @@ async fn test_get_account_activities() {
         activity_types: Some(vec!["fill".to_string()]),
         ..Default::default()
     };
-    let activities = match get_account_activities(&alpaca, params).await {
+    let activities = match get_account_activities(
+        &alpaca,
+        AccountActivitiesParams::builder()
+            .activity_types(vec!["fill".to_string()])
+            .build(),
+    )
+    .await
+    {
         Ok(activities) => {
             assert!(!activities.is_empty(), "No activities returned");
             activities
@@ -188,10 +210,9 @@ async fn test_get_account_activities() {
     match get_specific_account_activities(
         &alpaca,
         ActivityType::Fill,
-        SpecificAccountActivitiesParams {
-            page_size: Some(1),
-            ..Default::default()
-        },
+        SpecificAccountActivitiesParams::builder()
+            .page_size(1)
+            .build(),
     )
     .await
     {

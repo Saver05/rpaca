@@ -2,6 +2,7 @@ use crate::auth::Alpaca;
 use crate::request::create_request;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
+use typed_builder::TypedBuilder;
 use uuid::Uuid;
 #[derive(Debug, Deserialize)]
 pub struct Wallet {
@@ -50,7 +51,7 @@ pub async fn retrieve_crypto_transfers(
     Ok(response.json().await?)
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TypedBuilder)]
 pub struct CryptoWithdrawalParams {
     pub amount: String,
     pub address: String,
@@ -105,7 +106,7 @@ pub async fn get_whitelisted_addresses(
     Ok(response.json().await?)
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TypedBuilder)]
 pub struct AddWhitelistedAddressParams {
     pub address: String,
     pub asset: String,
@@ -142,7 +143,7 @@ pub async fn delete_whitelisted_address(
     Ok(())
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TypedBuilder)]
 pub struct EstimatedGasFeeParams {
     pub asset: String,
     pub from_address: String,

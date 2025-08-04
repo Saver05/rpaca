@@ -2,6 +2,7 @@ use crate::auth::{Alpaca, TradingType};
 use crate::request::create_request;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
+use typed_builder::TypedBuilder;
 
 #[derive(Debug, Deserialize)]
 pub struct AccountConfigurations {
@@ -28,25 +29,34 @@ pub async fn get_account_configurations(
     Ok(response.json().await?)
 }
 
-#[derive(Debug, Serialize, Default)]
+#[derive(Debug, Serialize, Default, TypedBuilder)]
 pub struct UpdateAccountConfigurations {
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     dtbp_check: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     trade_confirm_email: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     suspend_trade: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     no_shorting: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     fractional_trading: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     max_margin_multiplier: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     max_options_trading_level: Option<i8>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pdt_check: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     ptp_no_exception_entry: Option<bool>,
 }
 pub async fn update_account_configurations(
@@ -81,10 +91,9 @@ async fn test_account_configurations() {
     };
     let new_configs = match update_account_configurations(
         &alpaca,
-        UpdateAccountConfigurations {
-            no_shorting: Some(true),
-            ..Default::default()
-        },
+        UpdateAccountConfigurations::builder()
+            .no_shorting(true)
+            .build(),
     )
     .await
     {
@@ -96,10 +105,9 @@ async fn test_account_configurations() {
     assert_eq!(new_configs.fractional_trading, configs.fractional_trading);
     match update_account_configurations(
         &alpaca,
-        UpdateAccountConfigurations {
-            no_shorting: Some(false),
-            ..Default::default()
-        },
+        UpdateAccountConfigurations::builder()
+            .no_shorting(false)
+            .build(),
     )
     .await
     {

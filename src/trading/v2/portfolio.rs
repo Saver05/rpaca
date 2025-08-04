@@ -2,15 +2,25 @@ use crate::auth::{Alpaca, TradingType};
 use crate::request::create_request;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
-#[derive(Debug, Default, Serialize)]
+use typed_builder::TypedBuilder;
+
+#[derive(Debug, Default, Serialize, TypedBuilder, Clone)]
 pub struct PortfolioParams {
+    #[builder(default, setter(strip_option))]
     period: Option<String>,
+    #[builder(default, setter(strip_option))]
     timeframe: Option<String>,
+    #[builder(default, setter(strip_option))]
     intraday_reporting: Option<String>,
+    #[builder(default, setter(strip_option))]
     start: Option<String>,
+    #[builder(default, setter(strip_option))]
     pnl_reset: Option<String>,
+    #[builder(default, setter(strip_option))]
     end: Option<String>,
+    #[builder(default, setter(strip_option))]
     extended_hours: Option<String>,
+    #[builder(default, setter(strip_option))]
     cashflow_types: Option<String>,
 }
 #[derive(Debug, Deserialize)]
@@ -70,7 +80,7 @@ pub async fn get_portfolio_history(
 async fn test_portfolio_history() {
     let alpaca = Alpaca::from_env(TradingType::Paper).unwrap();
 
-    let history = get_portfolio_history(&alpaca, PortfolioParams::default())
+    let history = get_portfolio_history(&alpaca, PortfolioParams::builder().build())
         .await
         .unwrap();
     assert_eq!(history.timeframe, "1D")

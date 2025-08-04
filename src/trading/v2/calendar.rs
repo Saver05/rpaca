@@ -2,11 +2,15 @@ use crate::auth::{Alpaca, TradingType};
 use crate::request::create_request;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
+use typed_builder::TypedBuilder;
 
-#[derive(Debug, Deserialize, Serialize, Default)]
+#[derive(Debug, Deserialize, Serialize, Default, TypedBuilder)]
 pub struct CalendarParams {
+    #[builder(default, setter(strip_option))]
     start: Option<String>,
+    #[builder(default, setter(strip_option))]
     end: Option<String>,
+    #[builder(default, setter(strip_option))]
     date_type: Option<String>,
 }
 #[derive(Debug, Deserialize, Serialize)]
@@ -38,10 +42,7 @@ pub async fn get_calendar(
 #[tokio::test]
 async fn test_calendar() {
     let alpaca = Alpaca::from_env(TradingType::Paper).unwrap();
-    let params = CalendarParams {
-        ..Default::default()
-    };
-    match get_calendar(&alpaca, params).await {
+    match get_calendar(&alpaca, CalendarParams::builder().build()).await {
         Ok(calendar) => {
             assert_eq!(calendar[0].close, "16:00");
             assert_eq!(calendar[0].date, "1970-01-02");

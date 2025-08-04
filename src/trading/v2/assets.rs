@@ -3,6 +3,7 @@ use crate::request::create_request;
 use chrono::NaiveDate;
 use reqwest::Method;
 use serde::{Deserialize, Deserializer, Serialize};
+use typed_builder::TypedBuilder;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Asset {
@@ -132,22 +133,36 @@ pub struct GetOptionContractsResponse {
     pub next_page_token: Option<String>,
 }
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Debug, Default, Serialize, TypedBuilder)]
 pub struct GetOptionContractsParams {
+    #[builder(default, setter(strip_option))]
     underlying_symbols: Option<String>, // comma-separated
+    #[builder(default, setter(strip_option))]
     status: Option<String>,
+    #[builder(default, setter(strip_option))]
     expiration_date: Option<NaiveDate>,
+    #[builder(default, setter(strip_option))]
     expiration_date_gte: Option<NaiveDate>,
+    #[builder(default, setter(strip_option))]
     expiration_date_lte: Option<NaiveDate>,
+    #[builder(default, setter(strip_option))]
     root_symbol: Option<String>,
+    #[builder(default, setter(strip_option))]
     #[serde(rename = "type")]
     contract_type: Option<String>,
+    #[builder(default, setter(strip_option))]
     style: Option<String>,
+    #[builder(default, setter(strip_option))]
     strike_price_gte: Option<f64>,
+    #[builder(default, setter(strip_option))]
     strike_price_lte: Option<f64>,
+    #[builder(default, setter(strip_option))]
     limit: Option<u32>,
+    #[builder(default, setter(strip_option))]
     page_token: Option<String>,
+    #[builder(default, setter(strip_option))]
     ppind: Option<bool>,
+    #[builder(default, setter(strip_option))]
     show_deliverables: Option<bool>,
 }
 
@@ -297,11 +312,14 @@ async fn test_assets() {
 #[tokio::test]
 async fn test_options() {
     let alpaca = Alpaca::from_env(TradingType::Paper).expect("Failed to read env");
-    let params = GetOptionContractsParams {
-        root_symbol: Option::from("AAPL".to_string()),
-        ..Default::default()
-    };
-    let options = match get_option_contracts(&alpaca, params).await {
+    let options = match get_option_contracts(
+        &alpaca,
+        GetOptionContractsParams::builder()
+            .root_symbol("AAPL".to_string())
+            .build(),
+    )
+    .await
+    {
         Ok(options) => {
             assert_eq!(options.option_contracts[0].root_symbol, "AAPL");
             options

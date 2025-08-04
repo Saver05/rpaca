@@ -150,25 +150,34 @@ pub async fn create_order(
     Ok(info)
 }
 
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default, TypedBuilder)]
 pub struct GetOrdersParams {
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub status: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub limit: Option<i128>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub after: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub until: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub direction: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub nested: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub symbols: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub side: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub asset_class: Option<String>,
 }
 
@@ -259,23 +268,24 @@ pub async fn get_order_by_id(
         Ok(response.json().await?)
     }
 }
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default, TypedBuilder)]
 pub struct ReplaceOrderParams {
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[builder(default, setter(strip_option))]
     pub qty: Option<String>,
-
+    #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
-
+    #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub limit_price: Option<String>,
-
+    #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stop_price: Option<String>,
-
+    #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub trail: Option<String>,
-
+    #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
 }
@@ -337,17 +347,7 @@ async fn test_orders() {
     tokio::time::sleep(std::time::Duration::from_secs(1)).await;
     let get_order_response = match get_orders(
         &alpaca,
-        GetOrdersParams {
-            status: Some("all".to_string()),
-            limit: None,
-            after: None,
-            until: None,
-            direction: None,
-            nested: None,
-            symbols: None,
-            side: None,
-            asset_class: None,
-        },
+        GetOrdersParams::builder().status("all".to_string()).build(),
     )
     .await
     {

@@ -26,9 +26,10 @@ pub async fn get_watchlists(
     Ok(response.json().await?)
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TypedBuilder)]
 pub struct CreateWatchlistParams {
     name: String,
+    #[builder(default, setter(strip_option))]
     symbols: Option<Vec<String>>,
 }
 
@@ -44,6 +45,7 @@ pub struct WatchlistAssets {
 }
 use crate::trading::v2::assets::Asset;
 use serde::de::Deserializer;
+use typed_builder::TypedBuilder;
 
 fn null_to_empty_vec<'de, D>(deserializer: D) -> Result<Vec<Asset>, D::Error>
 where
@@ -85,9 +87,10 @@ pub async fn get_watchlist_by_id(
     Ok(response.json().await?)
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TypedBuilder)]
 pub struct UpdateWatchlistParams {
     name: String,
+    #[builder(default, setter(strip_option))]
     symbols: Option<Vec<String>>,
 }
 
@@ -263,10 +266,9 @@ async fn test_watchlists() {
     }
     let watchlist = create_watchlist(
         &alpaca,
-        CreateWatchlistParams {
-            name: "test".to_string(),
-            symbols: None,
-        },
+        CreateWatchlistParams::builder()
+            .name("test".to_string())
+            .build(),
     )
     .await
     .unwrap();
@@ -280,10 +282,9 @@ async fn test_watchlists() {
     let watchlist = update_watchlist_by_id(
         &alpaca,
         watchlist.id,
-        UpdateWatchlistParams {
-            name: "test2".to_string(),
-            symbols: None,
-        },
+        UpdateWatchlistParams::builder()
+            .name("test2".to_string())
+            .build(),
     )
     .await
     .unwrap();
@@ -291,10 +292,9 @@ async fn test_watchlists() {
     let watchlist = update_watchlist_by_name(
         &alpaca,
         "test2".to_string(),
-        UpdateWatchlistParams {
-            name: "test3".to_string(),
-            symbols: None,
-        },
+        UpdateWatchlistParams::builder()
+            .name("test3".to_string())
+            .build(),
     )
     .await
     .unwrap();
@@ -318,10 +318,10 @@ async fn test_watchlists() {
     }
     let watchlist = match create_watchlist(
         &alpaca,
-        CreateWatchlistParams {
-            name: "test".to_string(),
-            symbols: Some(vec!["AAPL".to_string(), "GOOG".to_string()]),
-        },
+        CreateWatchlistParams::builder()
+            .name("test".to_string())
+            .symbols(vec!["AAPL".to_string(), "GOOG".to_string()])
+            .build(),
     )
     .await
     {
@@ -335,10 +335,10 @@ async fn test_watchlists() {
     let watchlist = update_watchlist_by_id(
         &alpaca,
         watchlist.id,
-        UpdateWatchlistParams {
-            name: "test2".to_string(),
-            symbols: Some(vec!["AAPL".to_string(), "GOOG".to_string()]),
-        },
+        UpdateWatchlistParams::builder()
+            .name("test2".to_string())
+            .symbols(vec!["AAPL".to_string(), "GOOG".to_string()])
+            .build(),
     )
     .await
     .unwrap();

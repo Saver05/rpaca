@@ -111,29 +111,18 @@ async fn test_position() {
     let alpaca = Alpaca::from_env(TradingType::Paper).unwrap();
     let order = match create_order(
         &alpaca,
-        OrderRequest {
-            symbol: "GOOG".to_string(),
-            qty: Some("2".to_string()),
-            notional: None,
-            side: "buy".to_string(),
-            order_type: "market".to_string(),
-            time_in_force: "day".to_string(),
-            limit_price: None,
-            stop_price: None,
-            trail_price: None,
-            trail_percent: None,
-            extended_hours: None,
-            client_order_id: None,
-            order_class: None,
-            legs: None,
-            take_profit: None,
-            stop_loss: None,
-        },
+        OrderRequest::builder()
+            .symbol("GOOG")
+            .qty("2")
+            .side("buy")
+            .order_type("market")
+            .time_in_force("day")
+            .build(),
     )
     .await
     {
         Ok(order) => order,
-        Err(e) => panic!("Failed to create order for positions{}", e),
+        Err(e) => panic!("Failed to create order for positions{e}"),
     };
 
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;

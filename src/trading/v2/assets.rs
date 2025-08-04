@@ -301,17 +301,19 @@ async fn test_options() {
         root_symbol: Option::from("AAPL".to_string()),
         ..Default::default()
     };
-    match get_option_contracts(&alpaca, params).await {
+    let options = match get_option_contracts(&alpaca, params).await {
         Ok(options) => {
             assert_eq!(options.option_contracts[0].root_symbol, "AAPL");
-            assert_eq!(options.option_contracts[0].symbol, "AAPL250801C00110000");
+            options
         }
         Err(e) => {
             println!("Failed to get options with error: {e}");
             assert!(false);
+            return;
         }
-    }
-    match get_option_contracts_by_symbol(&alpaca, String::from("AAPL250801C00110000")).await {
+    };
+    match get_option_contracts_by_symbol(&alpaca, options.option_contracts[0].symbol.clone()).await
+    {
         Ok(options) => {
             assert_eq!(options.root_symbol, "AAPL");
         }

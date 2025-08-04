@@ -2,7 +2,8 @@ use crate::auth::{Alpaca, TradingType};
 use crate::request::create_request;
 use chrono::{DateTime, Utc};
 use reqwest::Method;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, Serializer};
+use typed_builder::TypedBuilder;
 use uuid::Uuid;
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Order {
@@ -46,44 +47,78 @@ pub struct Order {
     pub expires_at: DateTime<Utc>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, TypedBuilder)]
 pub struct OrderRequest {
+    #[builder(setter(into))]
     pub symbol: String,
+
+    #[builder(default, setter(strip_option, into))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub qty: Option<String>,
+
+    #[builder(default, setter(strip_option, into))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub notional: Option<String>,
-    pub side: String, // "buy" or "sell"
+
+    #[builder(setter(into))]
+    pub side: String,
+
+    #[builder(setter(into))]
     #[serde(rename = "type")]
-    pub order_type: String, // "market", "limit", etc.
-    pub time_in_force: String, // "day", "gtc", etc.
+    pub order_type: String,
+
+    #[builder(setter(into))]
+    pub time_in_force: String,
+
+    #[builder(default, setter(strip_option, into))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub limit_price: Option<String>,
+
+    #[builder(default, setter(strip_option, into))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stop_price: Option<String>,
+
+    #[builder(default, setter(strip_option, into))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub trail_price: Option<String>,
+
+    #[builder(default, setter(strip_option, into))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub trail_percent: Option<String>,
+
+    #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub extended_hours: Option<bool>,
+
+    #[builder(default, setter(strip_option, into))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+
+    #[builder(default, setter(strip_option, into))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub order_class: Option<String>,
+
+    #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub legs: Option<Vec<Legs>>,
+
+    #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub take_profit: Option<TakeProfit>,
+
+    #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stop_loss: Option<StopLoss>,
 }
+
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Legs {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub position_intent: Option<String>,
+
     pub symbol: String,
     pub ratio_qty: String,
 }
@@ -92,6 +127,7 @@ pub struct Legs {
 pub struct TakeProfit {
     pub limit_price: String,
 }
+
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct StopLoss {
     pub stop_price: String,
@@ -278,24 +314,13 @@ async fn test_orders() {
     let alpaca = Alpaca::from_env(TradingType::Paper).unwrap();
     let create_order_response = match create_order(
         &alpaca,
-        OrderRequest {
-            symbol: "AAPL".to_string(),
-            qty: Some("1".to_string()),
-            notional: None,
-            side: "buy".to_string(),
-            order_type: "market".to_string(),
-            time_in_force: "day".to_string(),
-            limit_price: None,
-            stop_price: None,
-            trail_price: None,
-            trail_percent: None,
-            extended_hours: None,
-            client_order_id: None,
-            order_class: None,
-            legs: None,
-            take_profit: None,
-            stop_loss: None,
-        },
+        OrderRequest::builder()
+            .symbol("AAPL")
+            .qty("1")
+            .side("buy")
+            .order_type("market")
+            .time_in_force("day")
+            .build(),
     )
     .await
     {
@@ -383,24 +408,13 @@ async fn test_orders() {
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
     let create_order_response = match create_order(
         &alpaca,
-        OrderRequest {
-            symbol: "AAPL".to_string(),
-            qty: Some("1".to_string()),
-            notional: None,
-            side: "sell".to_string(),
-            order_type: "market".to_string(),
-            time_in_force: "day".to_string(),
-            limit_price: None,
-            stop_price: None,
-            trail_price: None,
-            trail_percent: None,
-            extended_hours: None,
-            client_order_id: None,
-            order_class: None,
-            legs: None,
-            take_profit: None,
-            stop_loss: None,
-        },
+        OrderRequest::builder()
+            .symbol("AAPL")
+            .qty("1")
+            .time_in_force("day")
+            .side("sell")
+            .order_type("market")
+            .build(),
     )
     .await
     {

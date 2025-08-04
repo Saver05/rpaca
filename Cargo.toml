@@ -1,7 +1,17 @@
 [package]
 name = "rpaca"
-version = "1.0.0"
+version = "0.5.0"
 edition = "2024"
+authors = ["Jack Frambes <saver05@jackframbes.com>"]
+description = "A rust crate wrapping the Alpaca API "
+license = "MIT OR Apache-2.0"    # or another valid SPDX license
+readme = "README.md"
+repository = "https://github.com/Saver05/rpaca"
+homepage = "https://github.com/Saver05/rpaca"
+documentation = "https://docs.rs/rpaca"
+keywords = ["api", "trading", "finance"]    # up to 5
+categories = ["api-bindings", "finance", "asynchronous", "asynchronous"]
+include = ["src/**/*", "LICENSE", "README.*", "CHANGELOG.*"]
 
 [dependencies]
 reqwest = { version = "0.12.22", features = ["json"] }
@@ -15,3 +25,4 @@ uuid = { version = "1", features = ["serde", "v4"] }
 serde_qs = "0.7"
 strum_macros = "0.27.2"
 strum = "0.27.2"
+typed-builder = "0.15"

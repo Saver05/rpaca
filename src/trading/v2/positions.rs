@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use crate::trading::v2::orders::{Order, OrderRequest, create_order};
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
@@ -28,7 +28,7 @@ pub struct Position {
 }
 pub async fn get_positions(alpaca: &Alpaca) -> Result<Vec<Position>, Box<dyn std::error::Error>> {
     let endpoint = "/v2/positions".to_string();
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Getting positions failed: {}", text).into());
@@ -42,7 +42,7 @@ pub async fn get_single_position(
     symbol: String,
 ) -> Result<Position, Box<dyn std::error::Error>> {
     let endpoint = format!("/v2/positions/{symbol}");
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Getting single position failed: {}", text).into());
@@ -70,7 +70,7 @@ pub async fn close_position(
         let percentage = params.percentage.unwrap();
         endpoint = format!("{}?percentage={}", endpoint, percentage);
     }
-    let response = create_request::<()>(alpaca, Method::DELETE, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::DELETE, &endpoint, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Closing position failed: {}", text).into());
@@ -88,7 +88,8 @@ pub async fn close_all_positions(
     alpaca: &Alpaca,
     cancel_orders: bool,
 ) -> Result<Vec<ClosedPositions>, Box<dyn std::error::Error>> {
-    let response = create_request::<()>(alpaca, Method::DELETE, "/v2/positions", None).await?;
+    let response =
+        create_trading_request::<()>(alpaca, Method::DELETE, "/v2/positions", None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Closing all positions failed: {}", text).into());
@@ -101,7 +102,7 @@ pub async fn exercise_options_position(
     symbol: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let endpoint = format!("/v2/positions/{}/exercise", symbol);
-    let response = create_request::<()>(alpaca, Method::POST, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::POST, &endpoint, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Exercise options position failed: {}", text).into());

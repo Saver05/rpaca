@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use typed_builder::TypedBuilder;
@@ -21,7 +21,8 @@ pub async fn get_account_configurations(
     alpaca: &Alpaca,
 ) -> Result<AccountConfigurations, Box<dyn std::error::Error>> {
     let response =
-        create_request::<()>(alpaca, Method::GET, "/v2/account/configurations", None).await?;
+        create_trading_request::<()>(alpaca, Method::GET, "/v2/account/configurations", None)
+            .await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Deleting symbol from watchlist failed: {text}").into());
@@ -63,7 +64,7 @@ pub async fn update_account_configurations(
     alpaca: &Alpaca,
     configs: UpdateAccountConfigurations,
 ) -> Result<AccountConfigurations, Box<dyn std::error::Error>> {
-    let response = create_request(
+    let response = create_trading_request(
         alpaca,
         Method::PATCH,
         "/v2/account/configurations",

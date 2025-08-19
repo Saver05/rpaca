@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use reqwest::Method;
 use serde::Deserialize;
 
@@ -49,7 +49,7 @@ pub struct AccountInfo {
 }
 
 pub async fn get_account_info(alpaca: &Alpaca) -> Result<AccountInfo, Box<dyn std::error::Error>> {
-    let response = create_request::<()>(&alpaca, Method::GET, "/v2/account", None).await?;
+    let response = create_trading_request::<()>(&alpaca, Method::GET, "/v2/account", None).await?;
     let info: AccountInfo = response.json().await?;
     Ok(info)
 }

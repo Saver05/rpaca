@@ -1,5 +1,5 @@
 use crate::auth::Alpaca;
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use typed_builder::TypedBuilder;
@@ -15,7 +15,7 @@ pub async fn retrieve_crypto_wallets(
     asset: String,
 ) -> Result<Wallet, Box<dyn std::error::Error>> {
     let endpoint = format!("/v2/wallets?asset={}", asset);
-    let response = create_request::<()>(alpaca, Method::GET, &*endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &*endpoint, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Getting wallet failed: {text}").into());
@@ -43,7 +43,8 @@ pub struct CryptoTransfers {
 pub async fn retrieve_crypto_transfers(
     alpaca: &Alpaca,
 ) -> Result<Vec<CryptoTransfers>, Box<dyn std::error::Error>> {
-    let response = create_request::<()>(alpaca, Method::GET, "/v2/wallets/transfers", None).await?;
+    let response =
+        create_trading_request::<()>(alpaca, Method::GET, "/v2/wallets/transfers", None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Failed to get crypto transfers: {text}").into());
@@ -63,7 +64,7 @@ pub async fn request_withdrawl(
     params: CryptoWithdrawalParams,
 ) -> Result<CryptoTransfers, Box<dyn std::error::Error>> {
     let response =
-        create_request(alpaca, Method::POST, "/v2/wallets/transfers", Some(params)).await?;
+        create_trading_request(alpaca, Method::POST, "/v2/wallets/transfers", Some(params)).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Failed to create withdrawl: {text}").into());
@@ -76,7 +77,7 @@ pub async fn retrieve_crypto_transfer(
     transfer_id: String,
 ) -> Result<CryptoTransfers, Box<dyn std::error::Error>> {
     let endpoint = format!("/v2/wallets/transfers/{transfer_id}");
-    let response = create_request::<()>(alpaca, Method::GET, &*endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &*endpoint, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Failed to get transfer: {text}").into());
@@ -98,7 +99,7 @@ pub async fn get_whitelisted_addresses(
     alpaca: &Alpaca,
 ) -> Result<Vec<WhitelistedAddresses>, Box<dyn std::error::Error>> {
     let response =
-        create_request::<()>(alpaca, Method::GET, "/v2/wallets/whitelists", None).await?;
+        create_trading_request::<()>(alpaca, Method::GET, "/v2/wallets/whitelists", None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Failed to get whitelisted addresses: {text}").into());
@@ -117,7 +118,8 @@ pub async fn add_whitelisted_address(
     params: AddWhitelistedAddressParams,
 ) -> Result<WhitelistedAddresses, Box<dyn std::error::Error>> {
     let response =
-        create_request(alpaca, Method::POST, "/v2/wallets/whitelists", Some(params)).await?;
+        create_trading_request(alpaca, Method::POST, "/v2/wallets/whitelists", Some(params))
+            .await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Failed to add whitelisted address: {text}").into());
@@ -129,7 +131,7 @@ pub async fn delete_whitelisted_address(
     alpaca: &Alpaca,
     address_id: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let response = create_request::<()>(
+    let response = create_trading_request::<()>(
         alpaca,
         Method::DELETE,
         &format!("/v2/wallets/whitelists/{address_id}"),
@@ -161,7 +163,7 @@ pub async fn get_estimated_gas_fee(
     params: EstimatedGasFeeParams,
 ) -> Result<EstimatedGasFee, Box<dyn std::error::Error>> {
     let query = serde_urlencoded::to_string(&params)?;
-    let response = create_request::<()>(
+    let response = create_trading_request::<()>(
         alpaca,
         Method::GET,
         &format!("/v2/wallets/fees/estimate?{query}"),

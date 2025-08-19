@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use chrono::{DateTime, Utc};
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
@@ -140,7 +140,8 @@ pub async fn get_account_activities(
     let query_string = serde_qs::to_string(&params)?;
     let endpoint_with_query = format!("{base_endpoint}?{query_string}");
 
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint_with_query, None).await?;
+    let response =
+        create_trading_request::<()>(alpaca, Method::GET, &endpoint_with_query, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Getting account activities failed: {text}").into());
@@ -175,7 +176,8 @@ pub async fn get_specific_account_activities(
     let query_string = serde_qs::to_string(&params)?;
     let endpoint_with_query = format!("{base_endpoint}?{query_string}");
 
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint_with_query, None).await?;
+    let response =
+        create_trading_request::<()>(alpaca, Method::GET, &endpoint_with_query, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Getting account activities failed: {text}").into());
@@ -188,10 +190,6 @@ pub async fn get_specific_account_activities(
 async fn test_get_account_activities() {
     let alpaca = Alpaca::from_env(TradingType::Paper).unwrap();
 
-    let params = AccountActivitiesParams {
-        activity_types: Some(vec!["fill".to_string()]),
-        ..Default::default()
-    };
     let activities = match get_account_activities(
         &alpaca,
         AccountActivitiesParams::builder()

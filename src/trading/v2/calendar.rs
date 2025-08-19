@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use typed_builder::TypedBuilder;
@@ -30,7 +30,8 @@ pub async fn get_calendar(
     // Convert the params struct to a query string
     let query_string = serde_qs::to_string(&params)?;
     let endpoint_with_query = format!("{base_endpoint}?{query_string}");
-    let response = create_request::<()>(alpaca, Method::GET, &*endpoint_with_query, None).await?;
+    let response =
+        create_trading_request::<()>(alpaca, Method::GET, &*endpoint_with_query, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Getting calendar failed: {text}").into());

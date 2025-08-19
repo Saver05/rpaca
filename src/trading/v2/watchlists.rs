@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use serde_json::{from_str, json};
@@ -16,7 +16,8 @@ pub struct WatchlistNoAssets {
 pub async fn get_watchlists(
     alpaca: &Alpaca,
 ) -> Result<Vec<WatchlistNoAssets>, Box<dyn std::error::Error>> {
-    let response = create_request::<()>(alpaca, Method::GET, "/v2/watchlists", None).await?;
+    let response =
+        create_trading_request::<()>(alpaca, Method::GET, "/v2/watchlists", None).await?;
 
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
@@ -59,7 +60,7 @@ pub async fn create_watchlist(
     alpaca: &Alpaca,
     params: CreateWatchlistParams,
 ) -> Result<WatchlistAssets, Box<dyn std::error::Error>> {
-    let response = create_request::<CreateWatchlistParams>(
+    let response = create_trading_request::<CreateWatchlistParams>(
         alpaca,
         Method::POST,
         "/v2/watchlists",
@@ -79,7 +80,8 @@ pub async fn get_watchlist_by_id(
     id: Uuid,
 ) -> Result<WatchlistAssets, Box<dyn std::error::Error>> {
     let response =
-        create_request::<()>(alpaca, Method::GET, &format!("/v2/watchlists/{}", id), None).await?;
+        create_trading_request::<()>(alpaca, Method::GET, &format!("/v2/watchlists/{}", id), None)
+            .await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Getting watchlist by id failed: {}", text).into());
@@ -99,7 +101,7 @@ pub async fn update_watchlist_by_id(
     watchlist_id: Uuid,
     params: UpdateWatchlistParams,
 ) -> Result<WatchlistAssets, Box<dyn std::error::Error>> {
-    let response = create_request::<UpdateWatchlistParams>(
+    let response = create_trading_request::<UpdateWatchlistParams>(
         alpaca,
         Method::PUT,
         &format!("/v2/watchlists/{}", watchlist_id),
@@ -118,7 +120,7 @@ pub async fn add_asset_to_watchlist(
     watchlist_id: Uuid,
     symbol: String,
 ) -> Result<WatchlistAssets, Box<dyn std::error::Error>> {
-    let response = create_request(
+    let response = create_trading_request(
         alpaca,
         Method::POST,
         &format!("/v2/watchlists/{}", watchlist_id),
@@ -139,7 +141,7 @@ pub async fn delete_watchlist_by_id(
     alpaca: &Alpaca,
     watchlist_id: Uuid,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let response = create_request::<()>(
+    let response = create_trading_request::<()>(
         alpaca,
         Method::DELETE,
         &format!("/v2/watchlists/{}", watchlist_id),
@@ -157,7 +159,7 @@ pub async fn get_watchlist_by_name(
     alpaca: &Alpaca,
     name: String,
 ) -> Result<WatchlistAssets, Box<dyn std::error::Error>> {
-    let response = create_request::<()>(
+    let response = create_trading_request::<()>(
         alpaca,
         Method::GET,
         &format!("/v2/watchlists:by_name?name={}", name),
@@ -176,7 +178,7 @@ pub async fn update_watchlist_by_name(
     name: String,
     params: UpdateWatchlistParams,
 ) -> Result<WatchlistAssets, Box<dyn std::error::Error>> {
-    let response = create_request::<UpdateWatchlistParams>(
+    let response = create_trading_request::<UpdateWatchlistParams>(
         alpaca,
         Method::PUT,
         &format!("/v2/watchlists:by_name?name={}", name),
@@ -195,7 +197,7 @@ pub async fn add_asset_to_watchlist_by_name(
     name: String,
     symbol: String,
 ) -> Result<WatchlistAssets, Box<dyn std::error::Error>> {
-    let response = create_request(
+    let response = create_trading_request(
         alpaca,
         Method::POST,
         &format!("/v2/watchlists:by_name?name={}", name),
@@ -213,7 +215,7 @@ pub async fn delete_watchlist_by_name(
     alpaca: &Alpaca,
     name: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let response = create_request::<()>(
+    let response = create_trading_request::<()>(
         alpaca,
         Method::DELETE,
         &format!("/v2/watchlists:by_name?name={}", name),
@@ -232,7 +234,7 @@ pub async fn delete_symbol_from_watchlist(
     watchlist_id: Uuid,
     symbol: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let response = create_request::<()>(
+    let response = create_trading_request::<()>(
         alpaca,
         Method::DELETE,
         &format!("/v2/watchlists/{}/{}", watchlist_id, symbol),

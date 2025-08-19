@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use reqwest::Method;
 use serde::Deserialize;
 #[derive(Debug, Deserialize)]
@@ -11,7 +11,7 @@ pub struct Clock {
 }
 
 pub async fn get_clock(alpaca: &Alpaca) -> Result<Clock, Box<dyn std::error::Error>> {
-    let response = create_request::<()>(alpaca, Method::GET, "/v2/clock", None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, "/v2/clock", None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Getting clock failed: {}", text).into());

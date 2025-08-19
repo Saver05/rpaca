@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use chrono::{DateTime, Utc};
 use reqwest::Method;
 use serde::{Deserialize, Serialize, Serializer};
@@ -137,7 +137,7 @@ pub async fn create_order(
     alpaca: &Alpaca,
     order: OrderRequest,
 ) -> Result<Order, Box<dyn std::error::Error>> {
-    let response = create_request(alpaca, Method::POST, "/v2/orders", Some(order)).await?;
+    let response = create_trading_request(alpaca, Method::POST, "/v2/orders", Some(order)).await?;
     if !response.status().is_success() {
         let status = response.status();
         {
@@ -189,7 +189,7 @@ pub async fn get_orders(
     let query_string = serde_urlencoded::to_string(&params)?;
     let endpoint = format!("/v2/orders?{query_string}");
 
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
 
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
@@ -208,7 +208,7 @@ pub struct OrderCancel {
 pub async fn delete_all_orders(
     alpaca: &Alpaca,
 ) -> Result<Vec<Option<OrderCancel>>, Box<dyn std::error::Error>> {
-    let response = create_request::<()>(alpaca, Method::DELETE, "/v2/orders", None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::DELETE, "/v2/orders", None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         let message = format!("Request failed: {text}");
@@ -221,7 +221,7 @@ pub async fn get_order_by_client_order_id(
     alpaca: &Alpaca,
     client_order_id: &str,
 ) -> Result<Order, Box<dyn std::error::Error>> {
-    let response = create_request::<()>(
+    let response = create_trading_request::<()>(
         alpaca,
         Method::GET,
         &format!("/v2/orders:by_client_order_id?client_order_id={client_order_id}"),
@@ -242,9 +242,13 @@ pub async fn get_order_by_id(
     nested: Option<bool>,
 ) -> Result<Order, Box<dyn std::error::Error>> {
     if nested.is_none() {
-        let response =
-            create_request::<()>(alpaca, Method::GET, &format!("/v2/orders/{order_id}"), None)
-                .await?;
+        let response = create_trading_request::<()>(
+            alpaca,
+            Method::GET,
+            &format!("/v2/orders/{order_id}"),
+            None,
+        )
+        .await?;
         if !response.status().is_success() {
             let text = response.text().await.unwrap_or_default();
             let message = format!("Request failed: {text}");
@@ -253,7 +257,7 @@ pub async fn get_order_by_id(
         Ok(response.json().await?)
     } else {
         let nested = nested.unwrap_or(false);
-        let response = create_request::<()>(
+        let response = create_trading_request::<()>(
             alpaca,
             Method::GET,
             &format!("/v2/orders/{order_id}?nested={nested}"),
@@ -295,7 +299,7 @@ pub async fn replace_order_by_id(
     update: ReplaceOrderParams,
 ) -> Result<Order, Box<dyn std::error::Error>> {
     let endpoint = format!("/v2/orders/{}", order_id);
-    let response = create_request(alpaca, Method::PATCH, &endpoint, Some(update)).await?;
+    let response = create_trading_request(alpaca, Method::PATCH, &endpoint, Some(update)).await?;
 
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
@@ -311,7 +315,7 @@ pub async fn delete_order_by_id(
     order_id: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let endpoint = format!("/v2/orders/{}", order_id);
-    let response = create_request::<()>(alpaca, Method::DELETE, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::DELETE, &endpoint, None).await?;
     if !response.status().is_success() {
         let text = response.text().await.unwrap_or_default();
         return Err(format!("Delete failed: {}", text).into());

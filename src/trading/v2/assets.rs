@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use chrono::NaiveDate;
 use reqwest::Method;
 use serde::{Deserialize, Deserializer, Serialize};
@@ -88,7 +88,7 @@ pub async fn get_assets(
     let endpoint = format!("/v2/assets?{query_string}");
 
     // Make the request
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
 
     Ok(response.json().await?)
 }
@@ -98,7 +98,7 @@ pub async fn get_asset_by_symbol(
     symbol: String,
 ) -> Result<Asset, Box<dyn std::error::Error>> {
     let endpoint = format!("/v2/assets/{symbol}");
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
     Ok(response.json().await?)
 }
 
@@ -222,7 +222,7 @@ pub async fn get_option_contracts(
         format!("/v2/options/contracts?{query_string}")
     };
 
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
     Ok(response.json::<GetOptionContractsResponse>().await?)
 }
 #[derive(Debug, Deserialize)]
@@ -267,7 +267,7 @@ pub async fn get_option_contracts_by_symbol(
     symbol: String,
 ) -> Result<OptionContractBySymbol, Box<dyn std::error::Error>> {
     let endpoint = format!("/v2/options/contracts/{symbol}");
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
     Ok(response.json::<OptionContractBySymbol>().await?)
 }
 

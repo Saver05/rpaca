@@ -1,5 +1,5 @@
 use crate::auth::{Alpaca, TradingType};
-use crate::request::create_request;
+use crate::request::create_trading_request;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use typed_builder::TypedBuilder;
@@ -72,7 +72,7 @@ pub async fn get_portfolio_history(
         format!("/v2/account/portfolio/history?{query_string}")
     };
 
-    let response = create_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
+    let response = create_trading_request::<()>(alpaca, Method::GET, &endpoint, None).await?;
     Ok(response.json().await?)
 }
 

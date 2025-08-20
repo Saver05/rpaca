@@ -48,6 +48,17 @@ pub struct AccountInfo {
     pub user_configurations: Option<serde_json::Value>, // null in JSON
 }
 
+/// Retrieves detailed information about the trading account.
+///
+/// This function fetches comprehensive information about the Alpaca trading account,
+/// including account status, balances, buying power, margin information, and various
+/// configuration settings.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+///
+/// # Returns
+/// * `Result<AccountInfo, Box<dyn std::error::Error>>` - Detailed account information or an error
 pub async fn get_account_info(alpaca: &Alpaca) -> Result<AccountInfo, Box<dyn std::error::Error>> {
     let response = create_trading_request::<()>(&alpaca, Method::GET, "/v2/account", None).await?;
     let info: AccountInfo = response.json().await?;

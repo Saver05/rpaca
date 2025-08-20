@@ -1,3 +1,15 @@
+//! Assets module for Alpaca API v2.
+//!
+//! This module provides functionality for retrieving information about tradable assets
+//! from Alpaca's trading API. It supports querying both stock and option assets with
+//! various filtering capabilities.
+//!
+//! The module includes functionality for:
+//! - Retrieving lists of assets with filtering by status, class, and exchange
+//! - Looking up specific assets by symbol
+//! - Retrieving option contract information
+//! - Getting detailed information about option contracts including deliverables
+
 use crate::auth::{Alpaca, TradingType};
 use crate::request::create_trading_request;
 use chrono::NaiveDate;
@@ -25,6 +37,16 @@ pub struct Asset {
     attributes: Vec<String>,
 }
 
+/// Deserializes a JSON null value as an empty vector of strings.
+///
+/// This function is used as a custom deserializer for the `attributes` field in the `Asset` struct.
+/// It converts JSON null values to empty vectors, allowing for more consistent handling of optional arrays.
+///
+/// # Arguments
+/// * `deserializer` - The deserializer to use
+///
+/// # Returns
+/// * `Result<Vec<String>, D::Error>` - An empty vector if the JSON value is null, or the deserialized vector otherwise
 fn null_to_empty_vec_str<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
 where
     D: Deserializer<'de>,
@@ -57,6 +79,20 @@ impl Asset {
         }
     }
 }
+/// Retrieves a list of assets based on the provided filters.
+///
+/// This function fetches a list of tradable assets from Alpaca's trading API,
+/// with optional filtering by status, asset class, exchange, and attributes.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `status` - Optional filter for asset status (e.g., "active")
+/// * `asset_class` - Optional filter for asset class (e.g., "us_equity")
+/// * `exchange` - Optional filter for the exchange (e.g., "NYSE")
+/// * `attributes` - Optional list of attributes to filter by
+///
+/// # Returns
+/// * `Result<Vec<Asset>, Box<dyn std::error::Error>>` - A list of assets matching the filters or an error
 pub async fn get_assets(
     alpaca: &Alpaca,
     status: Option<String>,
@@ -93,6 +129,16 @@ pub async fn get_assets(
     Ok(response.json().await?)
 }
 
+/// Retrieves information about a specific asset by its symbol.
+///
+/// This function fetches detailed information about a single asset identified by its trading symbol.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `symbol` - The trading symbol of the asset to retrieve
+///
+/// # Returns
+/// * `Result<Asset, Box<dyn std::error::Error>>` - The asset information or an error
 pub async fn get_asset_by_symbol(
     alpaca: &Alpaca,
     symbol: String,
@@ -166,6 +212,17 @@ pub struct GetOptionContractsParams {
     show_deliverables: Option<bool>,
 }
 
+/// Retrieves a list of option contracts based on the provided parameters.
+///
+/// This function fetches option contracts from Alpaca's trading API with various filtering options
+/// such as underlying symbol, expiration date, strike price, and contract type.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `params` - Parameters to filter the option contracts
+///
+/// # Returns
+/// * `Result<GetOptionContractsResponse, Box<dyn std::error::Error>>` - A response containing option contracts and pagination information, or an error
 pub async fn get_option_contracts(
     alpaca: &Alpaca,
     params: GetOptionContractsParams,
@@ -262,6 +319,17 @@ pub struct Deliverable {
     pub settlement_method: String,
     pub delayed_settlement: bool,
 }
+/// Retrieves detailed information about a specific option contract by its symbol.
+///
+/// This function fetches comprehensive information about a single option contract,
+/// including deliverables and contract specifications.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `symbol` - The option contract symbol (e.g., "AAPL230616C00150000")
+///
+/// # Returns
+/// * `Result<OptionContractBySymbol, Box<dyn std::error::Error>>` - Detailed option contract information or an error
 pub async fn get_option_contracts_by_symbol(
     alpaca: &Alpaca,
     symbol: String,

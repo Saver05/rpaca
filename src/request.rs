@@ -1,9 +1,25 @@
+//! Request handling module for Alpaca API.
+//!
+//! This module provides functionality for creating and sending HTTP requests to the Alpaca API,
+//! including both trading and market data endpoints. It handles authentication headers and
+//! request formatting.
+
 use crate::auth;
 use crate::auth::TradingType;
 use auth::Alpaca;
 use reqwest::{Method, Response};
 use serde::Serialize;
 
+/// Creates and sends an HTTP request to the Alpaca trading API.
+///
+/// # Parameters
+/// * `alpaca` - The Alpaca authentication instance containing API keys and configuration
+/// * `method` - The HTTP method to use for the request (GET, POST, etc.)
+/// * `endpoint` - The API endpoint to call (e.g., "/v2/account")
+/// * `body` - Optional JSON body to include with the request
+///
+/// # Returns
+/// A Result containing either the HTTP Response or a reqwest Error
 pub async fn create_trading_request<T: Serialize>(
     alpaca: &Alpaca,
     method: Method,
@@ -25,6 +41,16 @@ pub async fn create_trading_request<T: Serialize>(
     request_builder.send().await
 }
 
+/// Creates and sends an HTTP request to the Alpaca market data API.
+///
+/// # Parameters
+/// * `alpaca` - The Alpaca authentication instance containing API keys and configuration
+/// * `method` - The HTTP method to use for the request (GET, POST, etc.)
+/// * `endpoint` - The API endpoint to call (e.g., "/v2/stocks/snapshots")
+/// * `body` - Optional JSON body to include with the request
+///
+/// # Returns
+/// A Result containing either the HTTP Response or a reqwest Error
 pub async fn create_data_request<T: Serialize>(
     alpaca: &Alpaca,
     method: Method,

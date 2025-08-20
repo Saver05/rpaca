@@ -1,3 +1,16 @@
+//! Orders module for Alpaca API v2.
+//!
+//! This module provides functionality for creating, retrieving, modifying, and canceling
+//! orders through Alpaca's trading API. It supports various order types including market,
+//! limit, stop, and bracket orders with different time-in-force options.
+//!
+//! The module includes functionality for:
+//! - Creating new orders with various parameters
+//! - Retrieving existing orders with filtering options
+//! - Replacing/modifying existing orders
+//! - Canceling individual or all open orders
+//! - Working with complex order types like bracket orders
+
 use crate::auth::{Alpaca, TradingType};
 use crate::request::create_trading_request;
 use chrono::{DateTime, Utc};
@@ -133,6 +146,18 @@ pub struct StopLoss {
     pub stop_price: String,
     pub limit_price: String,
 }
+/// Creates a new order with the specified parameters.
+///
+/// This function submits a new order to Alpaca's trading API with the parameters
+/// specified in the OrderRequest. It supports various order types including market,
+/// limit, stop, and bracket orders with different time-in-force options.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `order` - The order parameters including symbol, quantity, side, type, etc.
+///
+/// # Returns
+/// * `Result<Order, Box<dyn std::error::Error>>` - The created order information or an error
 pub async fn create_order(
     alpaca: &Alpaca,
     order: OrderRequest,
@@ -181,6 +206,18 @@ pub struct GetOrdersParams {
     pub asset_class: Option<String>,
 }
 
+/// Retrieves a list of orders based on the provided parameters.
+///
+/// This function fetches orders from Alpaca's trading API with various filtering options
+/// such as status, limit, date range, direction, and symbols. It can retrieve both open
+/// and closed orders.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `params` - Parameters to filter the orders (status, limit, date range, etc.)
+///
+/// # Returns
+/// * `Result<Vec<Order>, Box<dyn std::error::Error>>` - A list of orders matching the filters or an error
 pub async fn get_orders(
     alpaca: &Alpaca,
     params: GetOrdersParams,
@@ -205,6 +242,16 @@ pub struct OrderCancel {
     pub id: Uuid,
     pub status: i128,
 }
+/// Cancels all open orders for the account.
+///
+/// This function attempts to cancel all open orders for the account. It returns
+/// information about the cancellation status of each order.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+///
+/// # Returns
+/// * `Result<Vec<Option<OrderCancel>>, Box<dyn std::error::Error>>` - A list of cancellation results or an error
 pub async fn delete_all_orders(
     alpaca: &Alpaca,
 ) -> Result<Vec<Option<OrderCancel>>, Box<dyn std::error::Error>> {
@@ -217,6 +264,17 @@ pub async fn delete_all_orders(
     Ok(response.json().await?)
 }
 
+/// Retrieves an order by its client-assigned order ID.
+///
+/// This function fetches a specific order using the client-assigned order ID,
+/// which is useful for tracking orders that were created by your application.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `client_order_id` - The client-assigned order ID to look up
+///
+/// # Returns
+/// * `Result<Order, Box<dyn std::error::Error>>` - The order information or an error
 pub async fn get_order_by_client_order_id(
     alpaca: &Alpaca,
     client_order_id: &str,

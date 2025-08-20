@@ -1,3 +1,9 @@
+//! Trading v2 API module.
+//!
+//! This module contains implementations for the v2 version of Alpaca's trading API,
+//! providing access to account information, orders, positions, and other trading functionality.
+//! It includes endpoints for managing all aspects of trading with Alpaca.
+
 pub mod account_activities;
 pub mod account_configurations;
 pub mod assets;

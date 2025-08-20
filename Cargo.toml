@@ -1,6 +1,6 @@
 [package]
 name = "rpaca"
-version = "0.5.0"
+version = "0.7.5"
 edition = "2024"
 authors = ["Jack Frambes <saver05@jackframbes.com>"]
 description = "A rust crate wrapping the Alpaca API "
@@ -11,7 +11,7 @@ homepage = "https://github.com/Saver05/rpaca"
 documentation = "https://docs.rs/rpaca"
 keywords = ["api", "trading", "finance"]    # up to 5
 categories = ["api-bindings", "finance", "asynchronous", "asynchronous"]
-include = ["src/**/*", "LICENSE", "README.*", "CHANGELOG.*"]
+include = ["src/**/*", "LICENSE-MIT", "LICENSE-APACHE", "README.*", "CHANGELOG.*"]
 
 [dependencies]
 reqwest = { version = "0.12.22", features = ["json"] }

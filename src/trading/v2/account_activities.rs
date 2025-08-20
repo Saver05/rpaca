@@ -1,3 +1,14 @@
+//! Account activities module for Alpaca API v2.
+//!
+//! This module provides functionality for retrieving account activities from Alpaca's trading API.
+//! It supports querying both trading and non-trading activities with various filtering options.
+//!
+//! The module includes functionality for:
+//! - Retrieving all account activities with date range filtering
+//! - Querying specific activity types (trades, dividends, fees, etc.)
+//! - Handling both trading activities (orders, fills) and non-trading activities (dividends, fees)
+//! - Detailed activity information including dates, amounts, and related identifiers
+
 use crate::auth::{Alpaca, TradingType};
 use crate::request::create_trading_request;
 use chrono::{DateTime, Utc};
@@ -130,6 +141,18 @@ pub enum AccountActivity {
     NonTrading(AccountNonTradeActivity),
 }
 
+/// Retrieves account activities based on the provided parameters.
+///
+/// This function fetches a list of account activities from Alpaca's trading API,
+/// which can include both trading activities (orders, fills) and non-trading activities
+/// (dividends, fees, etc.). The activities can be filtered using various parameters.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `params` - Parameters to filter the activities (date range, activity types, etc.)
+///
+/// # Returns
+/// * `Result<Vec<AccountActivity>, Box<dyn std::error::Error>>` - A list of account activities or an error
 pub async fn get_account_activities(
     alpaca: &Alpaca,
     params: AccountActivitiesParams,
@@ -165,6 +188,19 @@ pub struct SpecificAccountActivitiesParams {
     pub page_token: Option<String>,
 }
 
+/// Retrieves account activities of a specific type based on the provided parameters.
+///
+/// This function fetches a list of account activities of a specific type from Alpaca's trading API.
+/// It allows for more targeted querying compared to `get_account_activities` by focusing on
+/// a single activity type (e.g., fills, dividends, fees).
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `activity_type` - The specific type of activity to retrieve
+/// * `params` - Parameters to filter the activities (date range, pagination, etc.)
+///
+/// # Returns
+/// * `Result<Vec<AccountActivity>, Box<dyn std::error::Error>>` - A list of account activities of the specified type or an error
 pub async fn get_specific_account_activities(
     alpaca: &Alpaca,
     activity_type: ActivityType,

@@ -1,12 +1,26 @@
+//! Authentication module for Alpaca API.
+//!
+//! This module provides functionality for authenticating with the Alpaca API,
+//! including creating clients for both paper trading and live trading environments.
+//! It handles API key management and provides methods for making authenticated requests.
+
 use crate::request::create_trading_request;
 use reqwest::{Client as HttpClient, Method};
 use std::cmp::PartialEq;
 use std::env;
 
+/// Client for interacting with the Alpaca API.
+///
+/// This struct holds authentication credentials and connection details
+/// required for making requests to the Alpaca trading API.
 pub struct Alpaca {
+    /// The Alpaca API key ID used for authentication.
     apca_api_key_id: String,
+    /// The Alpaca API secret key used for authentication.
     apca_api_secret_key: String,
+    /// The base URL for the Alpaca API, depends on trading type (paper/live).
     trading_url: String,
+    /// HTTP client used for making requests to the Alpaca API.
     http_client: HttpClient,
 }
 

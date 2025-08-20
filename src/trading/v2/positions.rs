@@ -1,3 +1,15 @@
+//! Positions module for Alpaca API v2.
+//!
+//! This module provides functionality for managing trading positions through Alpaca's trading API.
+//! It supports retrieving, closing, and exercising positions for various asset types.
+//!
+//! The module includes functionality for:
+//! - Retrieving all open positions
+//! - Getting information about a specific position by symbol
+//! - Closing individual positions (fully or partially)
+//! - Closing all positions at once
+//! - Exercising options positions
+
 use crate::auth::{Alpaca, TradingType};
 use crate::request::create_trading_request;
 use crate::trading::v2::orders::{Order, OrderRequest, create_order};

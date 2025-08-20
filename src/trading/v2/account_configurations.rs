@@ -1,3 +1,14 @@
+//! Account configurations module for Alpaca API v2.
+//!
+//! This module provides functionality for retrieving and updating account configuration settings
+//! through Alpaca's trading API. These settings control various aspects of trading behavior
+//! and account functionality.
+//!
+//! The module includes functionality for:
+//! - Retrieving current account configuration settings
+//! - Updating account configuration settings
+//! - Managing settings like day trading buying power checks, margin multipliers, and trading restrictions
+
 use crate::auth::{Alpaca, TradingType};
 use crate::request::create_trading_request;
 use reqwest::Method;
@@ -17,6 +28,17 @@ pub struct AccountConfigurations {
     ptp_no_exception_entry: bool,
 }
 
+/// Retrieves the current account configuration settings.
+///
+/// This function fetches the current configuration settings for the Alpaca trading account,
+/// including settings for day trading buying power checks, trade confirmations, trading
+/// restrictions, and margin multipliers.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+///
+/// # Returns
+/// * `Result<AccountConfigurations, Box<dyn std::error::Error>>` - The account configuration settings or an error
 pub async fn get_account_configurations(
     alpaca: &Alpaca,
 ) -> Result<AccountConfigurations, Box<dyn std::error::Error>> {
@@ -60,6 +82,19 @@ pub struct UpdateAccountConfigurations {
     #[builder(default, setter(strip_option))]
     ptp_no_exception_entry: Option<bool>,
 }
+/// Updates the account configuration settings.
+///
+/// This function allows modifying various account configuration settings such as
+/// day trading buying power checks, trade confirmations, trading restrictions,
+/// and margin multipliers. Only the fields specified in the `configs` parameter
+/// will be updated; other settings will remain unchanged.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `configs` - The configuration settings to update
+///
+/// # Returns
+/// * `Result<AccountConfigurations, Box<dyn std::error::Error>>` - The updated account configuration settings or an error
 pub async fn update_account_configurations(
     alpaca: &Alpaca,
     configs: UpdateAccountConfigurations,

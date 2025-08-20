@@ -21,6 +21,18 @@ pub struct Calendar {
     settlement_date: String,
 }
 
+/// Retrieves the trading calendar for market days.
+///
+/// This function fetches the trading calendar from Alpaca's API, which includes
+/// information about market open and close times for trading days. The calendar
+/// can be filtered by date range and other parameters.
+///
+/// # Arguments
+/// * `alpaca` - The Alpaca client instance with authentication information
+/// * `params` - Parameters to filter the calendar (date range, etc.)
+///
+/// # Returns
+/// * `Result<Vec<Calendar>, Box<dyn std::error::Error>>` - A list of calendar entries or an error
 pub async fn get_calendar(
     alpaca: &Alpaca,
     params: CalendarParams,

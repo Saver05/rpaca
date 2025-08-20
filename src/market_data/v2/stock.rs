@@ -1,3 +1,17 @@
+//! Stock market data module for Alpaca API v2.
+//!
+//! This module provides functionality for accessing stock market data from Alpaca's v2 API,
+//! including historical bars, quotes, trades, auctions, and snapshots. It offers comprehensive
+//! methods for retrieving and analyzing various types of stock market data.
+//!
+//! The module includes functionality for:
+//! - Historical and latest bars (OHLCV data)
+//! - Historical and latest quotes (bid/ask data)
+//! - Historical and latest trades
+//! - Auction data (opening and closing)
+//! - Market snapshots
+//! - Exchange and trade condition codes
+
 use crate::auth::{Alpaca, TradingType};
 use crate::request::create_data_request;
 use reqwest::Method;
@@ -1928,19 +1942,19 @@ pub struct SnapshotResponse(pub HashMap<String, StockData>);
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StockData {
     /// The current day's OHLC bar data.
-    pub daily_bar: Bars,
+    pub dailyBar: Bars,
 
     /// The latest bid/ask quote information.
-    pub latest_quote: Quotes,
+    pub latestQuote: Quotes,
 
     /// The latest executed trade.
-    pub latest_trade: Trades,
+    pub latestTrade: Trades,
 
     /// The most recent 1-minute OHLC bar.
-    pub minute_bar: Bars,
+    pub minuteBar: Bars,
 
     /// The previous day's OHLC bar data.
-    pub prev_daily_bar: Bars,
+    pub prevDailyBar: Bars,
 }
 
 impl SnapshotResponse {
@@ -1968,27 +1982,27 @@ impl SnapshotResponse {
 impl StockData {
     /// Get the latest trade price
     pub fn latest_price(&self) -> f64 {
-        self.latest_trade.price
+        self.latestTrade.price
     }
 
     /// Get the spread between bid and ask
     pub fn spread(&self) -> f64 {
-        self.latest_quote.ask_price - self.latest_quote.bid_price
+        self.latestQuote.ask_price - self.latestQuote.bid_price
     }
 
     /// Get daily OHLC data as tuple
     pub fn daily_ohlc(&self) -> (f64, f64, f64, f64) {
         (
-            self.daily_bar.open,
-            self.daily_bar.high,
-            self.daily_bar.low,
-            self.daily_bar.close,
+            self.dailyBar.open,
+            self.dailyBar.high,
+            self.dailyBar.low,
+            self.dailyBar.close,
         )
     }
 
     /// Check if price is above previous daily close
     pub fn is_above_prev_close(&self) -> bool {
-        self.latest_trade.price > self.prev_daily_bar.close
+        self.latestTrade.price > self.prevDailyBar.close
     }
 }
 

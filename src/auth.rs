@@ -24,10 +24,16 @@ pub struct Alpaca {
     http_client: HttpClient,
 }
 
+/// Trading environment type for Alpaca API.
+///
+/// Determines whether to use the paper trading environment (for testing)
+/// or the live trading environment (for real money trading).
 #[derive(Default)]
 pub enum TradingType {
+    /// Paper trading environment (simulated trading with no real money)
     #[default]
     Paper,
+    /// Live trading environment (real money trading)
     Live,
 }
 

@@ -1,6 +1,7 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 #![allow(unused_variables)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 //! # rpaca
 //!

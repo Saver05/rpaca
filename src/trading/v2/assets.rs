@@ -19,22 +19,22 @@ use typed_builder::TypedBuilder;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Asset {
-    id: String,
-    class: String,
-    exchange: String,
-    symbol: String,
-    name: String,
-    status: String,
-    tradable: bool,
-    marginable: bool,
-    maintenance_margin_requirement: u32,
-    margin_requirement_long: String,
-    margin_requirement_short: String,
-    shortable: bool,
-    easy_to_borrow: bool,
-    fractionable: bool,
+    pub id: String,
+    pub class: String,
+    pub exchange: String,
+    pub symbol: String,
+    pub name: String,
+    pub status: String,
+    pub tradable: bool,
+    pub marginable: bool,
+    pub maintenance_margin_requirement: u32,
+    pub margin_requirement_long: String,
+    pub margin_requirement_short: String,
+    pub shortable: bool,
+    pub easy_to_borrow: bool,
+    pub fractionable: bool,
     #[serde(default, deserialize_with = "null_to_empty_vec_str")]
-    attributes: Vec<String>,
+    pub attributes: Vec<String>,
 }
 
 /// Deserializes a JSON null value as an empty vector of strings.

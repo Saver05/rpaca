@@ -7,32 +7,32 @@ use typed_builder::TypedBuilder;
 #[derive(Debug, Default, Serialize, TypedBuilder, Clone)]
 pub struct PortfolioParams {
     #[builder(default, setter(strip_option))]
-    period: Option<String>,
+    pub period: Option<String>,
     #[builder(default, setter(strip_option))]
-    timeframe: Option<String>,
+    pub timeframe: Option<String>,
     #[builder(default, setter(strip_option))]
-    intraday_reporting: Option<String>,
+    pub intraday_reporting: Option<String>,
     #[builder(default, setter(strip_option))]
-    start: Option<String>,
+    pub start: Option<String>,
     #[builder(default, setter(strip_option))]
-    pnl_reset: Option<String>,
+    pub pnl_reset: Option<String>,
     #[builder(default, setter(strip_option))]
-    end: Option<String>,
+    pub end: Option<String>,
     #[builder(default, setter(strip_option))]
-    extended_hours: Option<String>,
+    pub extended_hours: Option<String>,
     #[builder(default, setter(strip_option))]
-    cashflow_types: Option<String>,
+    pub cashflow_types: Option<String>,
 }
 #[derive(Debug, Deserialize)]
 pub struct PortfolioHistory {
-    timestamp: Vec<i128>,
-    equity: Vec<f64>,
-    profit_loss: Vec<f64>,
-    profit_loss_pct: Vec<f64>,
-    base_value: f64,
-    base_value_asof: Option<String>,
-    timeframe: String,
-    cashflow: Option<serde_json::Value>,
+    pub timestamp: Vec<i128>,
+    pub equity: Vec<f64>,
+    pub profit_loss: Vec<f64>,
+    pub profit_loss_pct: Vec<f64>,
+    pub base_value: f64,
+    pub base_value_asof: Option<String>,
+    pub timeframe: String,
+    pub cashflow: Option<serde_json::Value>,
 }
 pub async fn get_portfolio_history(
     alpaca: &Alpaca,

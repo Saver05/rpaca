@@ -15,13 +15,13 @@ use std::env;
 /// required for making requests to the Alpaca trading API.
 pub struct Alpaca {
     /// The Alpaca API key ID used for authentication.
-    apca_api_key_id: String,
+    pub apca_api_key_id: String,
     /// The Alpaca API secret key used for authentication.
-    apca_api_secret_key: String,
+    pub apca_api_secret_key: String,
     /// The base URL for the Alpaca API, depends on trading type (paper/live).
-    trading_url: String,
+    pub trading_url: String,
     /// HTTP client used for making requests to the Alpaca API.
-    http_client: HttpClient,
+    pub http_client: HttpClient,
 }
 
 /// Trading environment type for Alpaca API.

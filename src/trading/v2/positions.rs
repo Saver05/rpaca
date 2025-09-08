@@ -92,9 +92,9 @@ pub async fn close_position(
 }
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClosedPositions {
-    symbol: String,
-    status: i128,
-    body: Order,
+    pub symbol: String,
+    pub status: i128,
+    pub body: Order,
 }
 pub async fn close_all_positions(
     alpaca: &Alpaca,

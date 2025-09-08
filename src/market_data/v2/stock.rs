@@ -46,48 +46,48 @@ pub struct HistoricalAuctionsParams {
     /// List of stock symbols to retrieve auction data for.
     /// Will be serialized as a comma-separated string.
     #[serde(serialize_with = "serialize_symbols")]
-    symbols: Vec<String>,
+    pub symbols: Vec<String>,
 
     /// Start time for the data query in ISO 8601 format.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    start: Option<String>,
+    pub start: Option<String>,
 
     /// End time for the data query in ISO 8601 format.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    end: Option<String>,
+    pub end: Option<String>,
 
     /// Maximum number of data points to return.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    limit: Option<u16>,
+    pub limit: Option<u16>,
 
     /// Query for data as of this date (for historical snapshots).
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "asof")]
-    asof_date: Option<String>,
+    pub asof_date: Option<String>,
 
     /// Data feed to use (e.g., "sip", "iex").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    feed: Option<String>,
+    pub feed: Option<String>,
 
     /// Currency to use for the data (e.g., "USD").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    currency: Option<String>,
+    pub currency: Option<String>,
 
     /// Token for pagination to get the next page of results.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    page_token: Option<String>,
+    pub page_token: Option<String>,
 
     /// Sort order for results, defaults to "asc" (ascending).
     #[builder(default =Some("asc".to_string()), setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    sort: Option<String>,
+    pub sort: Option<String>,
 }
 
 /// Response from the historical auctions API endpoint.
@@ -304,55 +304,55 @@ pub struct HistoricalBarParams {
     /// List of stock symbols to retrieve bar data for.
     /// Will be serialized as a comma-separated string.
     #[serde(serialize_with = "serialize_symbols")]
-    symbols: Vec<String>,
+    pub symbols: Vec<String>,
 
     /// Time frame for the bars, e.g., "1Min", "5Min", "1Hour", "1Day".
-    timeframe: String,
+    pub timeframe: String,
 
     /// Start time for the data query in ISO 8601 format.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    start: Option<String>,
+    pub start: Option<String>,
 
     /// End time for the data query in ISO 8601 format.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    end: Option<String>,
+    pub end: Option<String>,
 
     /// Maximum number of bars to return.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    limit: Option<u16>,
+    pub limit: Option<u16>,
 
     /// Type of adjustment to apply to the data (e.g., "raw", "split", "dividend", "all").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    adjustment: Option<String>,
+    pub adjustment: Option<String>,
 
     /// Query for data as of this date (for historical snapshots).
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    asof: Option<String>,
+    pub asof: Option<String>,
 
     /// Data feed to use (e.g., "sip", "iex").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    feed: Option<String>,
+    pub feed: Option<String>,
 
     /// Currency to use for the data (e.g., "USD").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    currency: Option<String>,
+    pub currency: Option<String>,
 
     /// Token for pagination to get the next page of results.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    page_token: Option<String>,
+    pub page_token: Option<String>,
 
     /// Sort order for results (e.g., "asc", "desc").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    sort: Option<String>,
+    pub sort: Option<String>,
 }
 /// Response from the historical bars API endpoint.
 ///
@@ -361,13 +361,13 @@ pub struct HistoricalBarParams {
 pub struct BarResponse {
     /// Map of symbol to a vector of price bars.
     /// Each symbol has a list of bars representing price action over time.
-    bars: HashMap<String, Vec<Bars>>,
+    pub bars: HashMap<String, Vec<Bars>>,
 
     /// Token for pagination to get the next page of results.
-    next_page_token: String,
+    pub next_page_token: String,
 
     /// Currency used for the price values (e.g., "USD").
-    currency: Option<String>,
+    pub currency: Option<String>,
 }
 
 /// Represents a single OHLC (Open, High, Low, Close) price bar.
@@ -784,17 +784,17 @@ pub struct LatestBarsParams {
     /// List of stock symbols to retrieve the latest bars for.
     /// Will be serialized as a comma-separated string.
     #[serde(serialize_with = "serialize_symbols")]
-    symbols: Vec<String>,
+    pub symbols: Vec<String>,
 
     /// Data feed to use (e.g., "sip", "iex").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    feed: Option<String>,
+    pub feed: Option<String>,
 
     /// Currency to use for the data (e.g., "USD").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    currency: Option<String>,
+    pub currency: Option<String>,
 }
 
 /// Response from the latest bars API endpoint.
@@ -951,7 +951,7 @@ impl TradeConditionResponse {
 #[derive(Serialize)]
 struct CondQuery<'a> {
     /// The tape code (e.g., "A", "B", "C") representing an exchange group.
-    tape: &'a str,
+    pub tape: &'a str,
 }
 
 /// Retrieves trade condition codes and their descriptions from the Alpaca API.
@@ -1092,47 +1092,47 @@ pub struct HistoricalQuotesParams {
     /// List of stock symbols to retrieve quote data for.
     /// Will be serialized as a comma-separated string.
     #[serde(serialize_with = "serialize_symbols")]
-    symbols: Vec<String>,
+    pub symbols: Vec<String>,
 
     /// Start time for the data query in ISO 8601 format.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    start: Option<String>,
+    pub start: Option<String>,
 
     /// End time for the data query in ISO 8601 format.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    end: Option<String>,
+    pub end: Option<String>,
 
     /// Maximum number of quotes to return.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    limit: Option<usize>,
+    pub limit: Option<usize>,
 
     /// Query for data as of this date (for historical snapshots).
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    asof: Option<String>,
+    pub asof: Option<String>,
 
     /// Data feed to use (e.g., "sip", "iex").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    feed: Option<String>,
+    pub feed: Option<String>,
 
     /// Currency to use for the data (e.g., "USD").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    currency: Option<String>,
+    pub currency: Option<String>,
 
     /// Token for pagination to get the next page of results.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    page_token: Option<String>,
+    pub page_token: Option<String>,
 
     /// Sort order for results (e.g., "asc", "desc").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    sort: Option<String>,
+    pub sort: Option<String>,
 }
 
 /// Response from the historical quotes API endpoint.
@@ -1160,39 +1160,39 @@ pub struct HistoricalQuotes {
 pub struct Quotes {
     /// Timestamp in RFC-3339 format when the quote was recorded.
     #[serde(rename = "t")]
-    timestamp: String,
+    pub timestamp: String,
 
     /// Exchange code for the best bid.
     #[serde(rename = "bx")]
-    bid_exchange: String,
+    pub bid_exchange: String,
 
     /// Best bid price.
     #[serde(rename = "bp")]
-    bid_price: f64,
+    pub bid_price: f64,
 
     /// Size of the best bid (number of shares).
     #[serde(rename = "bs")]
-    bid_size: u64,
+    pub bid_size: u64,
 
     /// Exchange code for the best ask.
     #[serde(rename = "ax")]
-    ask_exchange: String,
+    pub ask_exchange: String,
 
     /// Best ask price.
     #[serde(rename = "ap")]
-    ask_price: f64,
+    pub ask_price: f64,
 
     /// Size of the best ask (number of shares).
     #[serde(rename = "as")]
-    ask_size: u64,
+    pub ask_size: u64,
 
     /// Condition flags for the quote.
     #[serde(rename = "c")]
-    condition_flags: Vec<String>,
+    pub condition_flags: Vec<String>,
 
     /// Exchange code where the quote was recorded.
     #[serde(rename = "z")]
-    exchange: String,
+    pub exchange: String,
 }
 /// Methods for accessing and manipulating historical quotes data.
 impl HistoricalQuotes {
@@ -1362,17 +1362,17 @@ pub struct LatestQuotesParams {
     /// List of stock symbols to retrieve the latest quotes for.
     /// Will be serialized as a comma-separated string.
     #[serde(serialize_with = "serialize_symbols")]
-    symbols: Vec<String>,
+    pub symbols: Vec<String>,
 
     /// Data feed to use (e.g., "sip", "iex").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    feed: Option<String>,
+    pub feed: Option<String>,
 
     /// Currency to use for the data (e.g., "USD").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    currency: Option<String>,
+    pub currency: Option<String>,
 }
 
 /// Response from the latest quotes API endpoint.
@@ -1535,47 +1535,47 @@ pub struct HistoricalTradesParams {
     /// List of stock symbols to retrieve trade data for.
     /// Will be serialized as a comma-separated string.
     #[serde(serialize_with = "serialize_symbols")]
-    symbols: Vec<String>,
+    pub symbols: Vec<String>,
 
     /// Start time for the data query in ISO 8601 format.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    start: Option<String>,
+    pub start: Option<String>,
 
     /// End time for the data query in ISO 8601 format.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    end: Option<String>,
+    pub end: Option<String>,
 
     /// Maximum number of trades to return.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    limit: Option<usize>,
+    pub limit: Option<usize>,
 
     /// Query for data as of this date (for historical snapshots).
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    asof: Option<String>,
+    pub asof: Option<String>,
 
     /// Data feed to use (e.g., "sip", "iex").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    feed: Option<String>,
+    pub feed: Option<String>,
 
     /// Currency to use for the data (e.g., "USD").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    currency: Option<String>,
+    pub currency: Option<String>,
 
     /// Token for pagination to get the next page of results.
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    page_token: Option<String>,
+    pub page_token: Option<String>,
 
     /// Sort order for results (e.g., "asc", "desc").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    sort: Option<String>,
+    pub sort: Option<String>,
 }
 
 /// Response from the historical trades API endpoint.
@@ -1670,36 +1670,36 @@ impl HistoricalTrades {
 pub struct Trades {
     /// Timestamp in RFC-3339 format when the trade was executed.
     #[serde(rename = "t")]
-    timestamp: String,
+    pub timestamp: String,
 
     /// Exchange where the trade was executed.
     #[serde(rename = "x")]
-    exchange: String,
+    pub exchange: String,
 
     /// Price at which the trade was executed.
     #[serde(rename = "p")]
-    price: f64,
+    pub price: f64,
 
     /// Size of the trade (number of shares).
     #[serde(rename = "s")]
-    size: u64,
+    pub size: u64,
 
     /// Unique identifier for the trade.
     #[serde(rename = "i")]
-    trade_id: u64,
+    pub trade_id: u64,
 
     /// Condition flags indicating special circumstances for the trade.
     #[serde(rename = "c")]
-    condition_flags: Vec<String>,
+    pub condition_flags: Vec<String>,
 
     /// Exchange code where the trade was executed.
     #[serde(rename = "z")]
-    exchange_code: String,
+    pub exchange_code: String,
 
     /// Optional update timestamp if the trade was updated.
     #[serde(rename = "u")]
     #[serde(default)]
-    update: Option<String>,
+    pub update: Option<String>,
 }
 
 /// Retrieves historical trade data from the Alpaca API.
@@ -1777,17 +1777,17 @@ pub struct LatestTradesParams {
     /// List of stock symbols to retrieve the latest trades for.
     /// Will be serialized as a comma-separated string.
     #[serde(serialize_with = "serialize_symbols")]
-    symbols: Vec<String>,
+    pub symbols: Vec<String>,
 
     /// Data feed to use (e.g., "sip", "iex").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    feed: Option<String>,
+    pub feed: Option<String>,
 
     /// Currency to use for the data (e.g., "USD").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    currency: Option<String>,
+    pub currency: Option<String>,
 }
 
 /// Response from the latest trades API endpoint.
@@ -1915,17 +1915,17 @@ pub struct SnapshotsParams {
     /// List of stock symbols to retrieve snapshots for.
     /// Will be serialized as a comma-separated string.
     #[serde(serialize_with = "serialize_symbols")]
-    symbols: Vec<String>,
+    pub symbols: Vec<String>,
 
     /// Data feed to use (e.g., "sip", "iex").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    feed: Option<String>,
+    pub feed: Option<String>,
 
     /// Currency to use for the data (e.g., "USD").
     #[builder(default, setter(strip_option))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    currency: Option<String>,
+    pub currency: Option<String>,
 }
 
 /// Response from the snapshots API endpoint.

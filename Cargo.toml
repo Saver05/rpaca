@@ -1,6 +1,6 @@
 [package]
 name = "rpaca"
-version = "0.7.7"
+version = "0.7.8"
 edition = "2024"
 authors = ["Jack Frambes <saver05@jackframbes.com>"]
 description = "A rust crate wrapping the Alpaca API "

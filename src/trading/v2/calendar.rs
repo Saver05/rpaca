@@ -7,18 +7,18 @@ use typed_builder::TypedBuilder;
 #[derive(Debug, Deserialize, Serialize, Default, TypedBuilder)]
 pub struct CalendarParams {
     #[builder(default, setter(strip_option))]
-    start: Option<String>,
+    pub start: Option<String>,
     #[builder(default, setter(strip_option))]
-    end: Option<String>,
+    pub end: Option<String>,
     #[builder(default, setter(strip_option))]
-    date_type: Option<String>,
+    pub date_type: Option<String>,
 }
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Calendar {
-    date: String,
-    open: String,
-    close: String,
-    settlement_date: String,
+    pub date: String,
+    pub open: String,
+    pub close: String,
+    pub settlement_date: String,
 }
 
 /// Retrieves the trading calendar for market days.

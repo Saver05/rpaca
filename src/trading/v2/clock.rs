@@ -13,10 +13,10 @@ use reqwest::Method;
 use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 pub struct Clock {
-    timestamp: String,
-    is_open: bool,
-    next_open: String,
-    next_close: String,
+    pub timestamp: String,
+    pub is_open: bool,
+    pub next_open: String,
+    pub next_close: String,
 }
 
 /// Retrieves the current market clock status.

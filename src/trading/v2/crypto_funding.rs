@@ -6,9 +6,9 @@ use typed_builder::TypedBuilder;
 use uuid::Uuid;
 #[derive(Debug, Deserialize)]
 pub struct Wallet {
-    chain: String,
-    address: String,
-    created_at: String,
+    pub chain: String,
+    pub address: String,
+    pub created_at: String,
 }
 /// Retrieves crypto wallet information for a specific asset.
 ///
@@ -36,19 +36,19 @@ pub async fn retrieve_crypto_wallets(
 
 #[derive(Debug, Deserialize)]
 pub struct CryptoTransfers {
-    id: Uuid,
-    tx_hash: String,
-    direction: String,
-    status: String,
-    amount: String,
-    usd_value: String,
-    network_fee: String,
-    fees: String,
-    chain: String,
-    asset: String,
-    from_address: String,
-    to_address: String,
-    created_at: String,
+    pub id: Uuid,
+    pub tx_hash: String,
+    pub direction: String,
+    pub status: String,
+    pub amount: String,
+    pub usd_value: String,
+    pub network_fee: String,
+    pub fees: String,
+    pub chain: String,
+    pub asset: String,
+    pub from_address: String,
+    pub to_address: String,
+    pub created_at: String,
 }
 
 /// Retrieves a list of all crypto transfers for the account.
@@ -130,12 +130,12 @@ pub async fn retrieve_crypto_transfer(
 
 #[derive(Debug, Deserialize)]
 pub struct WhitelistedAddresses {
-    id: String,
-    chain: String,
-    asset: String,
-    address: String,
-    status: String,
-    created_at: String,
+    pub id: String,
+    pub chain: String,
+    pub asset: String,
+    pub address: String,
+    pub status: String,
+    pub created_at: String,
 }
 
 /// Retrieves a list of whitelisted cryptocurrency addresses for the account.

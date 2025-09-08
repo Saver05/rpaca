@@ -21,21 +21,21 @@ use uuid::Uuid;
 #[derive(Debug, Deserialize, Serialize, Default, TypedBuilder)]
 pub struct AccountActivitiesParams {
     #[builder(default, setter(strip_option))]
-    activity_types: Option<Vec<String>>,
+    pub activity_types: Option<Vec<String>>,
     #[builder(default, setter(strip_option))]
-    category: Option<String>,
+    pub category: Option<String>,
     #[builder(default, setter(strip_option))]
-    date: Option<String>,
+    pub date: Option<String>,
     #[builder(default, setter(strip_option))]
-    until: Option<String>,
+    pub until: Option<String>,
     #[builder(default, setter(strip_option))]
-    after: Option<String>,
+    pub after: Option<String>,
     #[builder(default, setter(strip_option))]
-    direction: Option<String>,
+    pub direction: Option<String>,
     #[builder(default, setter(strip_option))]
-    page_size: Option<i32>,
+    pub page_size: Option<i32>,
     #[builder(default, setter(strip_option))]
-    page_token: Option<String>,
+    pub page_token: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq, EnumString, Display)]

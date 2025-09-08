@@ -6,11 +6,11 @@ use serde_json::{from_str, json};
 use uuid::Uuid;
 #[derive(Debug, Deserialize)]
 pub struct WatchlistNoAssets {
-    id: Uuid,
-    account_id: Uuid,
-    created_at: String,
-    updated_at: String,
-    name: String,
+    pub id: Uuid,
+    pub account_id: Uuid,
+    pub created_at: String,
+    pub updated_at: String,
+    pub name: String,
 }
 
 pub async fn get_watchlists(
@@ -29,20 +29,20 @@ pub async fn get_watchlists(
 
 #[derive(Debug, Serialize, TypedBuilder)]
 pub struct CreateWatchlistParams {
-    name: String,
+    pub name: String,
     #[builder(default, setter(strip_option))]
-    symbols: Option<Vec<String>>,
+    pub symbols: Option<Vec<String>>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct WatchlistAssets {
-    id: Uuid,
-    account_id: Uuid,
-    created_at: String,
-    updated_at: String,
-    name: String,
+    pub id: Uuid,
+    pub account_id: Uuid,
+    pub created_at: String,
+    pub updated_at: String,
+    pub name: String,
     #[serde(default, deserialize_with = "null_to_empty_vec")]
-    assets: Vec<Asset>,
+    pub assets: Vec<Asset>,
 }
 use crate::trading::v2::assets::Asset;
 use serde::de::Deserializer;
@@ -91,9 +91,9 @@ pub async fn get_watchlist_by_id(
 
 #[derive(Debug, Serialize, TypedBuilder)]
 pub struct UpdateWatchlistParams {
-    name: String,
+    pub name: String,
     #[builder(default, setter(strip_option))]
-    symbols: Option<Vec<String>>,
+    pub symbols: Option<Vec<String>>,
 }
 
 pub async fn update_watchlist_by_id(

@@ -182,34 +182,34 @@ pub struct GetOptionContractsResponse {
 #[derive(Debug, Default, Serialize, TypedBuilder)]
 pub struct GetOptionContractsParams {
     #[builder(default, setter(strip_option))]
-    underlying_symbols: Option<String>, // comma-separated
+    pub underlying_symbols: Option<String>, // comma-separated
     #[builder(default, setter(strip_option))]
-    status: Option<String>,
+    pub status: Option<String>,
     #[builder(default, setter(strip_option))]
-    expiration_date: Option<NaiveDate>,
+    pub expiration_date: Option<NaiveDate>,
     #[builder(default, setter(strip_option))]
-    expiration_date_gte: Option<NaiveDate>,
+    pub expiration_date_gte: Option<NaiveDate>,
     #[builder(default, setter(strip_option))]
-    expiration_date_lte: Option<NaiveDate>,
+    pub expiration_date_lte: Option<NaiveDate>,
     #[builder(default, setter(strip_option))]
-    root_symbol: Option<String>,
+    pub root_symbol: Option<String>,
     #[builder(default, setter(strip_option))]
     #[serde(rename = "type")]
-    contract_type: Option<String>,
+    pub contract_type: Option<String>,
     #[builder(default, setter(strip_option))]
-    style: Option<String>,
+    pub style: Option<String>,
     #[builder(default, setter(strip_option))]
-    strike_price_gte: Option<f64>,
+    pub strike_price_gte: Option<f64>,
     #[builder(default, setter(strip_option))]
-    strike_price_lte: Option<f64>,
+    pub strike_price_lte: Option<f64>,
     #[builder(default, setter(strip_option))]
-    limit: Option<u32>,
+    pub limit: Option<u32>,
     #[builder(default, setter(strip_option))]
-    page_token: Option<String>,
+    pub page_token: Option<String>,
     #[builder(default, setter(strip_option))]
-    ppind: Option<bool>,
+    pub ppind: Option<bool>,
     #[builder(default, setter(strip_option))]
-    show_deliverables: Option<bool>,
+    pub show_deliverables: Option<bool>,
 }
 
 /// Retrieves a list of option contracts based on the provided parameters.

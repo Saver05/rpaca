@@ -17,15 +17,15 @@ use typed_builder::TypedBuilder;
 
 #[derive(Debug, Deserialize)]
 pub struct AccountConfigurations {
-    dtbp_check: String,
-    trade_confirm_email: Option<String>,
-    suspend_trade: bool,
-    no_shorting: bool,
-    fractional_trading: bool,
-    max_margin_multiplier: String,
-    max_options_trading_level: Option<i8>,
-    pdt_check: String,
-    ptp_no_exception_entry: bool,
+    pub dtbp_check: String,
+    pub trade_confirm_email: Option<String>,
+    pub suspend_trade: bool,
+    pub no_shorting: bool,
+    pub fractional_trading: bool,
+    pub max_margin_multiplier: String,
+    pub max_options_trading_level: Option<i8>,
+    pub pdt_check: String,
+    pub ptp_no_exception_entry: bool,
 }
 
 /// Retrieves the current account configuration settings.
@@ -56,31 +56,31 @@ pub async fn get_account_configurations(
 pub struct UpdateAccountConfigurations {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[builder(default, setter(strip_option))]
-    dtbp_check: Option<String>,
+    pub dtbp_check: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[builder(default, setter(strip_option))]
-    trade_confirm_email: Option<String>,
+    pub trade_confirm_email: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[builder(default, setter(strip_option))]
-    suspend_trade: Option<bool>,
+    pub suspend_trade: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[builder(default, setter(strip_option))]
-    no_shorting: Option<bool>,
+    pub no_shorting: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[builder(default, setter(strip_option))]
-    fractional_trading: Option<bool>,
+    pub fractional_trading: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[builder(default, setter(strip_option))]
-    max_margin_multiplier: Option<String>,
+    pub max_margin_multiplier: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[builder(default, setter(strip_option))]
-    max_options_trading_level: Option<i8>,
+    pub max_options_trading_level: Option<i8>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[builder(default, setter(strip_option))]
-    pdt_check: Option<String>,
+    pub pdt_check: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[builder(default, setter(strip_option))]
-    ptp_no_exception_entry: Option<bool>,
+    pub ptp_no_exception_entry: Option<bool>,
 }
 /// Updates the account configuration settings.
 ///

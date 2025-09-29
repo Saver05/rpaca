@@ -4,3 +4,5 @@
 //! providing access to stock data.
 
 pub mod stock;
+mod stock_websocket;
+mod crypto_websocket;

@@ -103,7 +103,7 @@ async fn test_auth() {
     assert_eq!(alpaca.get_trading_url(), "https://paper-api.alpaca.markets");
     match create_trading_request::<()>(&alpaca, Method::GET, "/v2/account", None).await {
         Ok(resp) => match resp.text().await {
-            Ok(text) => assert_eq!(text, "{\"message\": \"forbidden.\"}\n"),
+            Ok(text) => assert_eq!(text, "{\"message\": \"unauthorized.\"}\n"),
             Err(e) => {
                 eprintln!("Failed to read response: {}", e);
                 assert!(false);

@@ -1,10 +1,10 @@
 [package]
 name = "rpaca"
-version = "0.7.8"
+version = "0.7.9"
 edition = "2024"
 authors = ["Jack Frambes <saver05@jackframbes.com>"]
 description = "A rust crate wrapping the Alpaca API "
-license = "MIT OR Apache-2.0"    # or another valid SPDX license
+license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/Saver05/rpaca"
 homepage = "https://github.com/Saver05/rpaca"
@@ -30,3 +30,10 @@ serde_qs = "0.7"
 strum_macros = "0.27.2"
 strum = "0.27.2"
 typed-builder = "0.21.0"
+tungstenite = "0.28.0"
+tokio-tungstenite = {version =  "0.28.0", features = ["native-tls"] }
+thiserror = "1"
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+anyhow = "1.0.100"
+futures-core = "0.3.31"
+tokio-stream = "0.1.17"

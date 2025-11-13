@@ -64,7 +64,7 @@ use crate::auth::{Alpaca, TradingType};
 /// let parsed: NumF64 = serde_json::from_str(json_string).unwrap();
 /// assert!(matches!(parsed, NumF64::S(ref s) if s == "42"));
 /// ```
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Serialize)]
 #[serde(untagged)]
 pub enum NumF64 { I(i64), F(f64), S(String) }
 
@@ -219,7 +219,7 @@ impl Subscribe {
 /// assert!(subscription_ack.updated_bars.is_empty());
 /// assert!(subscription_ack.orderbooks.is_empty());
 /// ```
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct SubscriptionAck {
     #[serde(default)] pub trades: Vec<String>,
     #[serde(default)] pub quotes: Vec<String>,
@@ -251,7 +251,7 @@ pub struct SubscriptionAck {
 /// - `Clone`: Allows the struct to be cloned, useful in scenarios where
 ///   multiple copies of the structure need to exist.
 ///
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct SuccessMsg {
     pub msg: Option<String>,
     pub code: Option<i64>,
@@ -275,7 +275,7 @@ pub struct SuccessMsg {
 ///
 /// ```
 /// use serde::Deserialize;
-/// #[derive(Debug, Deserialize, Clone)]
+/// #[derive(Debug, Deserialize, Clone, Serialize)]
 /// pub struct ErrorMsg {
 ///     pub msg: Option<String>,
 ///     pub code: Option<i64>,
@@ -288,7 +288,7 @@ pub struct SuccessMsg {
 ///
 /// println!("{:?}", error); // Output: ErrorMsg { msg: Some("An unknown error occurred"), code: Some(500) }
 /// ```
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct ErrorMsg {
     pub msg: Option<String>,
     pub code: Option<i64>,
@@ -351,7 +351,7 @@ pub struct ErrorMsg {
 ///     taker_side: "BUY"
 /// }
 /// ```
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Trade {
     #[serde(rename = "S")] pub symbol: String,
     #[serde(rename = "p")] pub price: f64,
@@ -421,7 +421,7 @@ pub struct Trade {
 ///
 /// In this example, the JSON data is successfully deserialized into a `Quote` instance,
 /// which then prints the associated fields for easy inspection.
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Quote{
     #[serde(rename = "S")] pub symbol: String,
     #[serde(rename = "bp")] pub bid_price: f64,
@@ -453,7 +453,7 @@ pub struct Quote{
 /// * `Deserialize` - Allows the struct to be deserialized from an external data source (e.g., JSON).
 /// * `Clone` - Allows for creating a duplicate of the `Bar` instance.
 /// This struct is commonly used for processing market data, such as candlestick data in financial applications.
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Bar{
     #[serde(rename = "S")] pub symbol: String,
     #[serde(rename = "o")] pub open: f64,
@@ -478,7 +478,7 @@ pub struct Bar{
 /// ```
 /// use serde::Deserialize;
 ///
-/// #[derive(Debug, Deserialize, Clone)]
+/// #[derive(Debug, Deserialize, Clone, Serialize)]
 /// pub struct Level {
 ///     pub p: f64,
 ///     pub s: f64,
@@ -487,7 +487,7 @@ pub struct Bar{
 /// let level = Level { p: 1.23, s: 4.56 };
 /// println!("{:?}", level); // Outputs: Level { p: 1.23, s: 4.56 }
 /// ```
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Level {
     pub p: f64,
     pub s: f64,
@@ -521,7 +521,7 @@ pub struct Level {
 ///   This is deserialized from the "a" key in the source data.
 ///
 /// * `reset` (`Option<bool>`
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Orderbook {
     #[serde(rename = "S")] pub symbol: String,
     #[serde(rename = "t")] pub timestamp: String,
@@ -547,7 +547,7 @@ pub struct Orderbook {
 /// Each variant corresponds to a specific message type and is deserialized according to the provided tag.
 ///
 /// This enum is derivable as `Debug` and `Clone` and requires deserialization through the `serde` library.
-#[derive(Debug, Deserialize,Clone)]
+#[derive(Debug, Deserialize,Clone, Serialize)]
 #[serde(tag = "T")]
 pub enum StockMsg {
     // market data

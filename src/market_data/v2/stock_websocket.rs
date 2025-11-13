@@ -19,7 +19,7 @@
 //! ```rust
 //! use serde::Deserialize;
 //!
-//! #[derive(Debug, Deserialize, Clone)]
+//! #[derive(Debug, Deserialize, Clone, Serialize)]
 //! pub struct Trade {
 //!     #[serde(rename = "S")]
 //!     pub symbol: String,
@@ -219,7 +219,7 @@ impl Subscribe {
 ///   adjustments to previously reported trade or quote information. Defaults to an empty vector.
 /// - `cancel_errors` (`Vec<String>`): A collection of subscribed cancel error channels, deserialized
 ///   from `"cancelErrors"`. Represents cancellations or errors related to orders. Defaults to an empty vector.
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct SubscriptionAck {
     #[serde(default)] pub trades: Vec<String>,
     #[serde(default)] pub quotes: Vec<String>,
@@ -257,7 +257,7 @@ pub struct SubscriptionAck {
 /// ```
 ///
 /// This struct can be useful in scenarios where you need to return structured success information from a function or API.
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct SuccessMsg {
     pub msg: Option<String>,
     pub code: Option<i64>,
@@ -278,7 +278,7 @@ pub struct SuccessMsg {
 /// ```rust
 /// use serde::Deserialize;
 ///
-/// #[derive(Debug, Deserialize, Clone)]
+/// #[derive(Debug, Deserialize, Clone, Serialize)]
 /// pub struct ErrorMsg {
 ///     pub msg: Option<String>,
 ///     pub code: Option<i64>,
@@ -291,7 +291,7 @@ pub struct SuccessMsg {
 ///
 /// println!("{:?}", error);
 /// ```
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct ErrorMsg {
     pub msg: Option<String>,
     pub code: Option<i64>,
@@ -305,7 +305,7 @@ pub struct ErrorMsg {
 ///
 /// Fields:
 /// - `symbol`: The symbol or ticker of the asset being traded (e.g., "AAPL").
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Trade {
     #[serde(rename = "S")] pub symbol: String,
     #[serde(rename = "i")] pub trade_id: i64,
@@ -354,46 +354,7 @@ pub struct Trade {
 ///   The identifier for the tape (or market data stream) on which the quote is published.
 ///
 /// This struct derives traits for `Debug`, `Clone`, and implements deserialization using `serde`.
-///
-/// # Example
-///
-/// ```rust
-/// use serde::Deserialize;
-/// use rpaca::market_data::v2::stock_websocket::Quote;
-///
-/// let data = r#"{
-///     "S": "AAPL",
-///     "ax": "NYSE",
-///     "ap": 150.25,
-///     "as": 100,
-///     "bx": "NASDAQ",
-///     "bp": 150.00,
-///     "bs": 200,
-///     "c": ["REGULAR"],
-///     "t": "2023-10-01T14:30:00Z",
-///     "z": "C"
-/// }"#;
-///
-/// let quote: Quote = serde_json::from_str(data).unwrap();
-/// println!("{:?}", quote);
-/// ```
-///
-/// This will output:
-/// ```text
-/// Quote {
-///     symbol: "AAPL",
-///     ask_exchange: "NYSE",
-///     ask_price: 150.25,
-///     ask_size: 100,
-///     bid_exchange: "NASDAQ",
-///     bid_price: 150.00,
-///     bid_size: 200,
-///     conditions: ["REGULAR"],
-///     timestamp: "2023-10-01T14:30:00Z",
-///     tape: "C"
-/// }
-/// ```
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Quote {
     #[serde(rename = "S")] pub symbol: String,
     #[serde(rename = "ax")] pub ask_exchange: String,
@@ -448,7 +409,7 @@ pub struct Quote {
 /// - This struct implements the `Debug`, `Deserialize`, and `Clone` traits.
 /// - Compatible with Serde for convenient serialization and deserialization of the data format.
 ///
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Bar {
     #[serde(rename = "S")] pub symbol: String,
     #[serde(rename = "o")] pub open: f64,
@@ -504,20 +465,20 @@ pub struct Bar {
 ///
 /// * `tape` (`String`):
 ///   The tape identifier (e.g., A, B, or C) indicating where the information originated.
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct TradeCorrections {
-    #[serde(rename = "S")] symbol: String,
-    #[serde(rename = "x")] exchange_code: String,
-    #[serde(rename = "oi")] original_trade_id: String,
-    #[serde(rename = "op")] original_trade_price: f64,
-    #[serde(rename = "os")] original_trade_size: i64,
-    #[serde(rename = "oc")] original_trade_conditions: Vec<String>,
-    #[serde(rename = "ci")] corrected_trade_id: String,
-    #[serde(rename = "cp")] corrected_trade_price: f64,
-    #[serde(rename = "cs")] corrected_trade_size: i64,
-    #[serde(rename = "cc")] corrected_trade_conditions: Vec<String>,
-    #[serde(rename = "t")] timestamp: String,
-    #[serde(rename = "z")] tape: String,
+    #[serde(rename = "S")] pub symbol: String,
+    #[serde(rename = "x")] pub exchange_code: String,
+    #[serde(rename = "oi")] pub original_trade_id: String,
+    #[serde(rename = "op")] pub original_trade_price: f64,
+    #[serde(rename = "os")] pub original_trade_size: i64,
+    #[serde(rename = "oc")] pub original_trade_conditions: Vec<String>,
+    #[serde(rename = "ci")] pub corrected_trade_id: String,
+    #[serde(rename = "cp")] pub corrected_trade_price: f64,
+    #[serde(rename = "cs")] pub corrected_trade_size: i64,
+    #[serde(rename = "cc")] pub corrected_trade_conditions: Vec<String>,
+    #[serde(rename = "t")] pub timestamp: String,
+    #[serde(rename = "z")] pub tape: String,
 }
 
 /// A data structure representing trade cancels and error information.
@@ -546,16 +507,16 @@ pub struct TradeCorrections {
 ///   Serialized/Deserialized as "t".
 /// - `tape` (`String`): The tape indicator, providing additional information about the trade.
 ///   Serialized/Deserialized as "z".
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct TradeCancelsAndErrors{
-    #[serde(rename = "S")] symbol: String,
-    #[serde(rename = "i")] trade_id: i64,
-    #[serde(rename = "x")] trade_exchange: String,
-    #[serde(rename = "p")] trade_price: f64,
-    #[serde(rename = "s")] trade_size: i64,
-    #[serde(rename = "a")] action: String,
-    #[serde(rename = "t")] timestamp: String,
-    #[serde(rename = "z")] tape: String,
+    #[serde(rename = "S")] pub symbol: String,
+    #[serde(rename = "i")] pub trade_id: i64,
+    #[serde(rename = "x")] pub trade_exchange: String,
+    #[serde(rename = "p")] pub trade_price: f64,
+    #[serde(rename = "s")] pub trade_size: i64,
+    #[serde(rename = "a")] pub action: String,
+    #[serde(rename = "t")] pub timestamp: String,
+    #[serde(rename = "z")] pub ape: String,
 }
 
 /// Represents the Limit Up-Limit Down (LULD) details for a specific financial instrument.
@@ -592,25 +553,78 @@ pub struct TradeCancelsAndErrors{
 /// * `Debug`: Facilitates formatting for debugging purposes.
 /// * `Deserialize`: Enables JSON deserialization into this struct.
 /// * `Clone`: Allows creating deep copies of `LimitUpLimitDown` instances.
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct LimitUpLimitDown{
-    #[serde(rename = "S")] symbol: String,
-    #[serde(rename = "u")] limit_up_price: f64,
-    #[serde(rename = "d")] limit_down_price: f64,
-    #[serde(rename = "i")] indicator: String,
-    #[serde(rename = "t")] timestamp: String,
-    #[serde(rename = "z")] tape: String,
+    #[serde(rename = "S")] pub symbol: String,
+    #[serde(rename = "u")] pub limit_up_price: f64,
+    #[serde(rename = "d")] pub limit_down_price: f64,
+    #[serde(rename = "i")] pub indicator: String,
+    #[serde(rename = "t")] pub timestamp: String,
+    #[serde(rename = "z")] pub tape: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+/// Struct representing the trading status of a financial instrument.
+///
+/// This struct captures details about the trading status of a given instrument 
+/// along with associated metadata such as the timestamp of the status and 
+/// other descriptive codes and messages.
+///
+/// # Fields
+///
+/// * `symbol` (`String`): The financial instrument or stock symbol.
+///   This field is mapped from the `S` key in the serialized data.
+///
+/// * `status_code` (`String`): A code representing the trading status.
+///   This field is mapped from the `sc` key in the serialized data.
+///
+/// * `status_message` (`String`): A descriptive message associated with the trading status.
+///   This field is mapped from the `sm` key in the serialized data.
+///
+/// * `reason_code` (`String`): A code that indicates the reason for the current trading status.
+///   This field is mapped from the `rc` key in the serialized data.
+///
+/// * `reason_message` (`String`): A descriptive message explaining the reason for the trading status.
+///   This field is mapped from the `rm` key in the serialized data.
+///
+/// * `timestamp` (`String`): A timestamp indicating when the trading status was recorded.
+///   This field is mapped from the `t` key in the serialized data.
+///
+/// * `tape` (`String`): An identifier for the data source or market tape where the status was recorded.
+///   This field is mapped from the `z` key in the serialized data.
+///
+/// # Traits
+///
+/// This struct derives the following traits:
+/// * `Debug`: Allows the struct to be formatted using the `{:?}` formatter.
+/// * `Deserialize`: Enables deserialization of the struct from formats supported by `serde`.
+/// * `Clone`: Enables cloning of the struct to create duplicate instances.
+/// * `Serialize`: Enables serialization of the struct to formats supported by `serde`.
+///
+/// # Examples
+///
+/// ```rust
+/// use serde::{Deserialize, Serialize};
+///
+/// #[derive(Debug, Deserialize, Clone, Serialize)]
+/// pub struct TradingStatus {
+///     #[serde(rename = "S")] pub symbol: String,
+///     #[serde(rename = "sc")] pub status_code: String,
+///     #[serde(rename = "sm")] pub status_message: String,
+///     #[serde(rename = "rc")] pub reason_code: String,
+///     #[serde(rename = "rm")] pub reason_message: String,
+///     #[serde(rename = "t")] pub timestamp: String,
+///     #[serde(rename = "z")] pub tape: String,
+/// }
+/// ```
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct TradingStatus{
-    #[serde(rename = "S")] symbol: String,
-    #[serde(rename = "sc")] status_code: String,
-    #[serde(rename = "sm")] status_message: String,
-    #[serde(rename = "rc")] reason_code: String,
-    #[serde(rename = "rm")] reason_message: String,
-    #[serde(rename = "t")] timestamp: String,
-    #[serde(rename = "z")] tape: String,
+    #[serde(rename = "S")] pub symbol: String,
+    #[serde(rename = "sc")] pub status_code: String,
+    #[serde(rename = "sm")] pub status_message: String,
+    #[serde(rename = "rc")] pub reason_code: String,
+    #[serde(rename = "rm")] pub reason_message: String,
+    #[serde(rename = "t")] pub timestamp: String,
+    #[serde(rename = "z")] pub tape: String,
 }
 
 /// Represents an `OrderImbalances` structure that contains information about market order imbalances.
@@ -632,12 +646,12 @@ pub struct TradingStatus{
 /// - `Debug`: For easy debugging and formatting.
 /// - `Clone`: To allow cloning of `OrderImbalances` instances.
 /// - `Deserialize`: To facilitate deserialization from structured data formats, such as JSON.
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct OrderImbalances{
-    #[serde(rename = "S")] symbol: String,
-    #[serde(rename = "p")] price: f64,
-    #[serde(rename = "t")] timestamp: String,
-    #[serde(rename = "z")] tape: String,
+    #[serde(rename = "S")] pub symbol: String,
+    #[serde(rename = "p")] pub price: f64,
+    #[serde(rename = "t")] pub timestamp: String,
+    #[serde(rename = "z")] pub tape: String,
 }
 
 /// Represents a message related to stock market data or administrative events.
@@ -700,7 +714,7 @@ pub struct OrderImbalances{
 /// Uses the `Serde` crate for deserialization and is tagged with a `T` field.
 /// The `#[serde(rename = "...")]` attribute maps the variant to the expected
 /// string identifier in the JSON data.
-#[derive(Debug, Deserialize,Clone)]
+#[derive(Debug, Deserialize,Clone, Serialize)]
 #[serde(tag = "T")]
 pub enum StockMsg {
     // market data

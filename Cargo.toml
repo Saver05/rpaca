@@ -1,6 +1,6 @@
 [package]
 name = "rpaca"
-version = "0.7.9"
+version = "0.8.0"
 edition = "2024"
 authors = ["Jack Frambes <saver05@jackframbes.com>"]
 description = "A rust crate wrapping the Alpaca API "
@@ -9,7 +9,7 @@ readme = "README.md"
 repository = "https://github.com/Saver05/rpaca"
 homepage = "https://github.com/Saver05/rpaca"
 documentation = "https://docs.rs/rpaca"
-keywords = ["api", "trading", "finance"]    # up to 5
+keywords = ["api", "trading", "finance"]
 categories = ["api-bindings", "finance", "asynchronous", "asynchronous"]
 include = ["src/**/*", "LICENSE-MIT", "LICENSE-APACHE", "README.*", "CHANGELOG.*"]
 
@@ -32,7 +32,6 @@ strum = "0.27.2"
 typed-builder = "0.21.0"
 tungstenite = "0.28.0"
 tokio-tungstenite = {version =  "0.28.0", features = ["native-tls"] }
-thiserror = "1"
 futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
 anyhow = "1.0.100"
 futures-core = "0.3.31"

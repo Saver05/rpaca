@@ -1013,7 +1013,7 @@ dependencies = [
 
 [[package]]
 name = "rpaca"
-version = "0.7.9"
+version = "0.8.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1027,7 +1027,6 @@ dependencies = [
  "serde_urlencoded",
  "strum",
  "strum_macros",
- "thiserror 1.0.69",
  "tokio",
  "tokio-stream",
  "tokio-tungstenite",

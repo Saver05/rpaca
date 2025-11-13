@@ -13,29 +13,10 @@
 //!   for programmatically identifying the type of error in applications.
 //!
 //! # Derives
-//! - `Debug`: Enables the struct to be formatted and displayed using the `{:?}` formatter, 
+//! - `Debug`: Enables the struct to be formatted and displayed using the `{:?}` formatter,
 //!   ideal for debugging purposes.
 //! - `Deserialize`: Facilitates the deserialization of this struct from serialized formats, such as JSON.
 //! - `Clone`: Allows this struct to be cloned, providing the ability to easily create duplicate instances of the error.
-//!
-//! # Usage Example
-//!
-//! ```rust
-//! use serde::Deserialize;
-//! use crate::ErrorMsg;
-//!
-//! let error_json = r#"
-//!     {
-//!         "msg": "Invalid API Key",
-//!         "code": 401
-//!     }
-//! "#;
-//!
-//! let error_msg: ErrorMsg = serde_json::from_str(error_json).unwrap();
-//!
-//! assert_eq!(error_msg.msg, Some("Invalid API Key".to_string()));
-//! assert_eq!(error_msg.code, Some(401));
-//! ```
 use anyhow::{anyhow, Result};
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
@@ -55,7 +36,7 @@ use crate::auth::{Alpaca, TradingType};
 /// - Clone-able to easily create duplicates of the value.
 /// - Debuggable to enable debugging using the `Debug` formatter.
 ///
-/// Additionally, `#[serde(untagged)]` indicates that Serde will infer the variant to deserialize 
+/// Additionally, `#[serde(untagged)]` indicates that Serde will infer the variant to deserialize
 /// based on the input type, rather than requiring a tag to distinguish between variants.
 ///
 /// ## Example
@@ -97,12 +78,12 @@ impl From<NumF64> for f64 {
     }
 }
 
-/// The `Subscribe` struct is used to manage subscription requests for different types of market data. 
+/// The `Subscribe` struct is used to manage subscription requests for different types of market data.
 /// Each field represents a subscription group, allowing customization of which data streams to subscribe to.
 ///
 /// # Fields
 ///
-/// * `trades` - A vector of strings representing the trade symbols to subscribe to. 
+/// * `trades` - A vector of strings representing the trade symbols to subscribe to.
 ///   If empty, this field will be skipped during serialization.
 ///
 /// * `quotes` - A vector of strings representing the quote symbols to subscribe to.
@@ -111,11 +92,11 @@ impl From<NumF64> for f64 {
 /// * `bars` - A vector of strings representing the bar (candlestick) symbols to subscribe to.
 ///   If empty, this field will be skipped during serialization.
 ///
-/// * `daily_bars` (serialized as `dailyBars`) - A vector of strings representing 
+/// * `daily_bars` (serialized as `dailyBars`) - A vector of strings representing
 ///   the symbols for daily bar data (e.g., daily candlesticks) to subscribe to.
 ///   If empty, this field will be skipped during serialization.
 ///
-/// * `updated_bars` (serialized as `updatedBars`) - A vector of strings representing 
+/// * `updated_bars` (serialized as `updatedBars`) - A vector of strings representing
 ///   the symbols for updated bar data to subscribe to.
 ///   If empty, this field will be skipped during serialization.
 ///
@@ -127,7 +108,7 @@ impl From<NumF64> for f64 {
 /// * `Debug` - Enables formatting of the `Subscribe` struct for debugging purposes.
 /// * `Default` - Provides a default implementation where all subscription vectors are empty.
 /// * `Clone` - Enables cloning of the `Subscribe` struct.
-/// * `Serialize` - Allows serialization of the struct into formats like JSON, with custom rules applied 
+/// * `Serialize` - Allows serialization of the struct into formats like JSON, with custom rules applied
 ///   (e.g., skipping empty fields and renaming some fields).
 #[derive(Debug, Default, Clone, Serialize)]
 pub struct Subscribe {
@@ -153,12 +134,6 @@ impl Subscribe {
     /// # Returns
     ///
     /// * `Self` - A new instance of the struct with default settings.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// let instance = MyStruct::new();
-    /// ```
     pub fn new() -> Self {
         Self::default()
     }
@@ -177,21 +152,6 @@ impl Subscribe {
     /// # Returns
     /// A `serde_json::Value` containing the JSON representation of the subscription action.
     ///
-    /// # Example
-    /// ```
-    /// let subscription_json = my_instance.action_json();
-    /// println!("{}", subscription_json);
-    /// // Output:
-    /// // {
-    /// //   "action": "subscribe",
-    /// //   "trades": ...,
-    /// //   "quotes": ...,
-    /// //   "bars": ...,
-    /// //   "dailyBars": ...,
-    /// //   "updatedBars": ...,
-    /// //   "orderbooks": ...
-    /// // }
-    /// ```
     pub fn action_json(&self) -> serde_json::Value {
         serde_json::json!({
             "action": "subscribe",
@@ -219,7 +179,7 @@ impl Subscribe {
 /// * `bars` - A vector of strings representing the symbols for which bar-related (e.g., candlestick) data is acknowledged as subscribed.
 ///   Defaults to an empty vector if not specified.
 ///
-/// * `daily_bars` (`dailyBars`) - A vector of strings representing the symbols for which daily bar-related data 
+/// * `daily_bars` (`dailyBars`) - A vector of strings representing the symbols for which daily bar-related data
 ///   is acknowledged as subscribed. This field is deserialized from the key `dailyBars` in a serialized structure.
 ///   Defaults to an empty vector if not specified.
 ///
@@ -240,7 +200,7 @@ impl Subscribe {
 ///
 /// ```rust
 /// use serde::Deserialize;
-/// use crate::SubscriptionAck;
+/// use rpaca::market_data::v2::crypto_websocket::{SubscriptionAck, NumF64};
 ///
 /// let json_data = r#"
 ///     {
@@ -285,7 +245,7 @@ pub struct SubscriptionAck {
 ///   used for applications where success codes (non-error codes) need to be passed back.
 ///
 /// # Derives
-/// - `Debug`: Allows the struct to be formatted using the `{:?}` formatter, 
+/// - `Debug`: Allows the struct to be formatted using the `{:?}` formatter,
 ///   useful for debugging purposes.
 /// - `Deserialize`: Enables deserialization from formats like JSON.
 /// - `Clone`: Allows the struct to be cloned, useful in scenarios where
@@ -299,16 +259,16 @@ pub struct SuccessMsg {
 
 /// A struct that represents an error message with an optional message and optional error code.
 ///
-/// This struct is commonly used to encapsulate error-related information in a structured format. 
-/// It derives the `Debug`, `Deserialize`, and `Clone` traits, which allow for debugging output, 
+/// This struct is commonly used to encapsulate error-related information in a structured format.
+/// It derives the `Debug`, `Deserialize`, and `Clone` traits, which allow for debugging output,
 /// deserialization from formats like JSON, and cloning of the struct, respectively.
 ///
 /// Fields:
 ///
-/// * `msg` - An optional String field that represents the error message. 
+/// * `msg` - An optional String field that represents the error message.
 ///   If present, this contains a human-readable description of the error.
 ///
-/// * `code` - An optional i64 field that represents the error code. 
+/// * `code` - An optional i64 field that represents the error code.
 ///   If present, this typically contains a machine-readable code corresponding to the error.
 ///
 /// Example:
@@ -364,7 +324,7 @@ pub struct ErrorMsg {
 /// # Example
 /// ```rust
 /// use serde_json::from_str;
-/// use your_crate::Trade; // Replace `your_crate` with the actual crate/module name.
+/// use rpaca::market_data::v2::crypto_websocket::{Trade, NumF64};
 ///
 /// let json_trade = r#"{
 ///     "S": "BTCUSD",
@@ -409,27 +369,27 @@ pub struct Trade {
 ///
 /// # Fields
 ///
-/// * `symbol` (`String`): 
+/// * `symbol` (`String`):
 ///   Represents the symbol (ticker) of the trading instrument, e.g., "AAPL" for Apple Inc.
 ///   Deserialized from the JSON key `"S"`.
 ///
-/// * `bid_price` (`f64`): 
+/// * `bid_price` (`f64`):
 ///   The best bid (highest price a buyer is willing to pay) for the instrument.
 ///   Deserialized from the JSON key `"bp"`.
 ///
-/// * `bid_size` (`f64`): 
+/// * `bid_size` (`f64`):
 ///   The size (quantity) associated with the best bid.
 ///   Deserialized from the JSON key `"bs"`.
 ///
-/// * `ask_price` (`f64`): 
+/// * `ask_price` (`f64`):
 ///   The best ask (lowest price a seller is willing to accept) for the instrument.
 ///   Deserialized from the JSON key `"ap"`.
 ///
-/// * `ask_size` (`f64`): 
+/// * `ask_size` (`f64`):
 ///   The size (quantity) associated with the best ask.
 ///   Deserialized from the JSON key `"as"`.
 ///
-/// * `timestamp` (`String`): 
+/// * `timestamp` (`String`):
 ///   The timestamp indicating when the quote data was recorded or received.
 ///   Deserialized from the JSON key `"t"`.
 ///
@@ -443,7 +403,7 @@ pub struct Trade {
 ///
 /// ```rust
 /// use serde::Deserialize;
-/// use your_crate_name::Quote;
+/// use rpaca::market_data::v2::crypto_websocket::Quote;
 ///
 /// let json_data = r#"{
 ///     "S": "AAPL",
@@ -471,7 +431,7 @@ pub struct Quote{
     #[serde(rename = "t")] pub timestamp: String,
 }
 
-/// The `Bar` struct represents a trading data entity, commonly used in financial markets 
+/// The `Bar` struct represents a trading data entity, commonly used in financial markets
 /// to encapsulate data for a single period of time in a candlestick format.
 ///
 /// Each field in the struct is deserialized from an external data source, where
@@ -492,36 +452,6 @@ pub struct Quote{
 /// * `Debug` - Enables the struct to be formatted using the `{:?}` formatter, useful for debugging and logging.
 /// * `Deserialize` - Allows the struct to be deserialized from an external data source (e.g., JSON).
 /// * `Clone` - Allows for creating a duplicate of the `Bar` instance.
-///
-/// # Example Usage
-///
-/// ```
-/// use serde::Deserialize;
-///
-/// #[derive(Debug, Deserialize, Clone)]
-/// pub struct Bar {
-///     #[serde(rename = "S")] pub symbol: String,
-///     #[serde(rename = "o")] pub open: f64,
-///     #[serde(rename = "h")] pub high: f64,
-///     #[serde(rename = "l")] pub low: f64,
-///     #[serde(rename = "c")] pub close: f64,
-///     #[serde(rename = "v")] pub volume: NumF64,
-///     #[serde(rename = "t")] pub timestamp: String,
-/// }
-///
-/// let bar_data = Bar {
-///     symbol: "AAPL".to_string(),
-///     open: 145.0,
-///     high: 150.0,
-///     low: 144.0,
-///     close: 148.5,
-///     volume: 10000.0.into(),
-///     timestamp: "2023-10-01T12:00:00Z".to_string(),
-/// };
-///
-/// println!("{:?}", bar_data);
-/// ```
-///
 /// This struct is commonly used for processing market data, such as candlestick data in financial applications.
 #[derive(Debug, Deserialize, Clone)]
 pub struct Bar{
@@ -536,8 +466,8 @@ pub struct Bar{
 
 /// A struct representing a level with two parameters.
 ///
-/// The `Level` struct is used to define a level with numerical values for parameters `p` and `s`. 
-/// This struct derives the `Debug`, `Deserialize`, and `Clone` traits, making it useful for debugging, 
+/// The `Level` struct is used to define a level with numerical values for parameters `p` and `s`.
+/// This struct derives the `Debug`, `Deserialize`, and `Clone` traits, making it useful for debugging,
 /// deserialization (e.g., from a file or API), and cloning.
 ///
 /// Fields:
@@ -567,7 +497,7 @@ pub struct Level {
 /// for a specific trading symbol at a given timestamp.
 ///
 /// The `Orderbook` struct is used to deserialize data typically obtained from market
-/// data feeds. It supports additional metadata such as a reset flag to indicate the 
+/// data feeds. It supports additional metadata such as a reset flag to indicate the
 /// need to refresh the orderbook state.
 ///
 /// # Fields
@@ -600,7 +530,7 @@ pub struct Orderbook {
     #[serde(rename = "r")] pub reset: Option<bool>,
 }
 
-/// Represents various types of stock market messages that can be deserialized and processed. 
+/// Represents various types of stock market messages that can be deserialized and processed.
 /// This enum leverages `serde` for deserialization and is tagged using the `T` field to determine the variant type.
 ///
 /// Variants:
@@ -614,7 +544,7 @@ pub struct Orderbook {
 /// - `Success`: Represents a success message, indicating an operation was successful, tagged as `"success"`.
 /// - `Error`: Represents an error message, indicating an issue or problem, tagged as `"error"`.
 ///
-/// Each variant corresponds to a specific message type and is deserialized according to the provided tag. 
+/// Each variant corresponds to a specific message type and is deserialized according to the provided tag.
 ///
 /// This enum is derivable as `Debug` and `Clone` and requires deserialization through the `serde` library.
 #[derive(Debug, Deserialize,Clone)]
@@ -708,31 +638,6 @@ pub struct CryptoStreamParams{
 ///   be sent as an error.
 /// - In the case of unrecoverable errors during reconnection, the stream will
 ///   continue attempting indefinitely, maintaining the backoff strategy.
-///
-/// # Example
-///
-/// ```rust
-/// use tokio_stream::StreamExt;
-/// use alpaca_sdk::{Alpaca, CryptoStreamParams, StockMsg};
-///
-/// #[tokio::main]
-/// async fn main() {
-///     let alpaca = Alpaca::new("api_key", "api_secret");
-///     let params = CryptoStreamParams::new("wss://crypto.alpaca.markets", ...);
-///
-///     if let Ok(stream) = stream_crypto_data(&alpaca, params).await {
-///         tokio::pin!(stream);
-///         while let Some(msg_result) = stream.next().await {
-///             match msg_result {
-///                 Ok(msg) => println!("Received: {:?}", msg),
-///                 Err(e) => eprintln!("Stream error: {:?}", e),
-///             }
-///         }
-///     } else {
-///         eprintln!("Failed to connect to crypto stream.");
-///     }
-/// }
-/// ```
 ///
 /// # Notes
 ///

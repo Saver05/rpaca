@@ -107,7 +107,7 @@ use crate::auth::{Alpaca, TradingType};
 ///
 /// ```rust
 /// use serde_json;
-/// use your_crate_name::Subscribe;
+/// use rpaca::market_data::v2::stock_websocket::Subscribe;
 ///
 /// let subscription = Subscribe {
 ///     trades: vec!["AAPL".to_string(), "GOOG".to_string()],
@@ -151,11 +151,6 @@ impl Subscribe {
     ///
     /// # Returns
     /// A new instance of the type initialized with default values.
-    ///
-    /// # Example
-    /// ```
-    /// let instance = TypeName::new();
-    /// ```
     pub fn new() -> Self {
         Self::default()
     }
@@ -180,33 +175,6 @@ impl Subscribe {
     /// - The caller is responsible for ensuring the struct fields are properly initialized
     ///   before invoking this method.
     ///
-    /// # Example
-    /// ```rust
-    /// let obj = YourStruct {
-    ///     trades: true,
-    ///     quotes: true,
-    ///     bars: false,
-    ///     daily_bars: true,
-    ///     updated_bars: false,
-    ///     statuses: true,
-    ///     lulds: true,
-    ///     imbalances: false,
-    /// };
-    ///
-    /// let json_data = obj.action_json();
-    /// println!("{}", json_data);
-    /// // Output (example):
-    /// // {
-    /// //   "action": "subscribe",
-    /// //   "trades": true,
-    /// //   "quotes": true,
-    /// //   "bars": false,
-    /// //   "dailyBars": true,
-    /// //   "updatedBars": false,
-    /// //   "statuses": true,
-    /// //   "lulds": true,
-    /// //   "imbalances": false
-    /// // }
     /// ```
     pub fn action_json(&self) -> serde_json::Value {
         serde_json::json!({
@@ -278,7 +246,7 @@ pub struct SubscriptionAck {
 ///
 /// # Examples
 /// ```
-/// use your_crate::SuccessMsg;
+/// use rpaca::market_data::v2::stock_websocket::SuccessMsg;
 ///
 /// let success = SuccessMsg {
 ///     msg: Some("Operation completed successfully".to_string()),
@@ -391,7 +359,7 @@ pub struct Trade {
 ///
 /// ```rust
 /// use serde::Deserialize;
-/// use my_module::Quote; // Assuming the struct is defined in `my_module`.
+/// use rpaca::market_data::v2::stock_websocket::Quote;
 ///
 /// let data = r#"{
 ///     "S": "AAPL",
@@ -732,21 +700,6 @@ pub struct OrderImbalances{
 /// Uses the `Serde` crate for deserialization and is tagged with a `T` field.
 /// The `#[serde(rename = "...")]` attribute maps the variant to the expected
 /// string identifier in the JSON data.
-///
-/// # Examples
-///
-/// ```
-/// use my_crate::StockMsg;
-/// use serde_json::from_str;
-///
-/// let json_data = r#"{ "T": "t", "symbol": "AAPL", "price": 150.0 }"#;
-/// let message: StockMsg = from_str(json_data).unwrap();
-///
-/// match message {
-///     StockMsg::Trade(trade) => println!("Trade data: {:?}", trade),
-///     _ => println!("Other message type"),
-/// }
-/// ```
 #[derive(Debug, Deserialize,Clone)]
 #[serde(tag = "T")]
 pub enum StockMsg {
@@ -800,8 +753,8 @@ pub enum StockMsg {
 /// # Usage
 ///
 /// ```
-/// use your_module::StockStreamParams;
-/// use your_module::Subscribe;
+/// use rpaca::market_data::v2::stock_websocket::StockStreamParams;
+/// use rpaca::market_data::v2::stock_websocket::Subscribe;
 ///
 /// let params = StockStreamParams::builder()
 ///     .subscription(Subscribe::new(/* subscription details */))
@@ -849,36 +802,6 @@ pub struct StockStreamParams{
 /// 4. Continuously listens for incoming messages and forwards them to the consumer via a
 ///    channel-backed [`Stream`].
 /// 5. Automatically reconnects on failure with an exponentially increasing backoff up to a maximum limit.
-///
-/// # Example
-///
-/// ```rust
-/// use your_crate::{stream_stock_data, Alpaca, StockStreamParams};
-/// use futures_util::StreamExt;
-///
-/// #[tokio::main]
-/// async fn main() {
-///     let alpaca = Alpaca::new("your_api_key", "your_api_secret");
-///
-///     let params = StockStreamParams {
-///         endpoint: "wss://data.alpaca.markets".to_string(),
-///         feed_path: "v2/stocks".to_string(),
-///         subscription: Subscription::new(vec!["T.AAPL", "Q.AAPL"]),
-///     };
-///
-///     match stream_stock_data(&alpaca, params).await {
-///         Ok(mut stream) => {
-///             while let Some(msg) = stream.next().await {
-///                 match msg {
-///                     Ok(stock_msg) => println!("Received: {:?}", stock_msg),
-///                     Err(err) => eprintln!("Error: {:?}", err),
-///                 }
-///             }
-///         }
-///         Err(err) => eprintln!("Failed to connect: {:?}", err),
-///     }
-/// }
-/// ```
 ///
 /// # Errors
 ///
